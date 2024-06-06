@@ -21,7 +21,8 @@ in {
 
     #kube
     kind
-    autojump
+    kubectl
+    kubectx
 
     htop
     neofetch
@@ -34,6 +35,7 @@ in {
     p7zip
 
     # utils
+    autojump
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
     yq-go # yaml processor https://github.com/mikefarah/yq
@@ -145,6 +147,7 @@ in {
       shell = "/etc/profiles/per-user/dchoi/bin/zsh";
     };
 
+    autojump.enable = true;
     alacritty = {
       enable = true;
       # custom settings
