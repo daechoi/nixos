@@ -107,7 +107,7 @@
 
     {
       mode = "n";
-      key = "<leader>w-";
+      key = "<leader>sv";
       action = "<C-W>s";
       options = {
         silent = true;
@@ -117,7 +117,7 @@
 
     {
       mode = "n";
-      key = "<leader>w|";
+      key = "<leader>ss";
       action = "<C-W>v";
       options = {
         silent = true;
@@ -127,7 +127,7 @@
 
     {
       mode = "n";
-      key = "<C-h>";
+      key = "<leader>h";
       action = "<C-W>h";
       options = {
         silent = true;
@@ -137,7 +137,7 @@
 
     {
       mode = "n";
-      key = "<C-l>";
+      key = "<leader>l";
       action = "<C-W>l";
       options = {
         silent = true;
@@ -147,7 +147,7 @@
 
     {
       mode = "n";
-      key = "<C-k>";
+      key = "<leader>k";
       action = "<C-W>k";
       options = {
         silent = true;
@@ -157,7 +157,7 @@
 
     {
       mode = "n";
-      key = "<C-j>";
+      key = "<leader>j";
       action = "<C-W>j";
       options = {
         silent = true;

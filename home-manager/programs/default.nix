@@ -123,7 +123,7 @@ in {
 
     foot = {
       enable = true;
-      setttings = {
+      settings = {
         main = {
           term = "xterm-256color-italic";
         };
@@ -145,7 +145,7 @@ in {
       enable = true;
       # custom settings
       settings = {
-        env.TERM = "xterm-256color";
+        env.TERM = "xterm-256color-italic";
         font = {
           size = 12;
         };
@@ -176,6 +176,8 @@ in {
         ll = "ls -l";
         update = "sudo nixos-rebuild switch";
         vim = "nvim";
+        g = "git";
+        k = "kubectl";
       };
       history = {
         size = 10000;
