@@ -23,6 +23,7 @@ in {
     kind
     kubectl
     kubectx
+    helm
 
     htop
     neofetch
