@@ -19,6 +19,10 @@ in {
     go
     rustup
 
+    #kube
+    kind
+    autojump
+
     htop
     neofetch
     nnn # terminal file manager
