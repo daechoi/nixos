@@ -90,7 +90,6 @@ in {
     usbutils # lsusb
 
     chromium
-    foot
   ];
 
   wayland.windowManager.sway = {
@@ -127,27 +126,19 @@ in {
       };
     };
 
-    foot = {
-      enable = true;
-      settings = {
-        main = {
-          term = "xterm-256color-italic";
-        };
-      };
-    };
-
     chromium.enable = true;
 
     tmux = {
       enable = true;
       keyMode = "vi";
       shortcut = "a";
-      terminal = "xterm-256color";
+      terminal = "xterm-256color-italic";
       clock24 = true;
       shell = "/etc/profiles/per-user/dchoi/bin/zsh";
     };
 
     autojump.enable = true;
+
     alacritty = {
       enable = true;
       # custom settings
@@ -191,12 +182,14 @@ in {
         path = "${config.xdg.dataHome}/zsh/history";
       };
 
-      envExtra = "export TERM=xterm-256color";
+      envExtra = "export TERM=xterm-256color-italic";
       initExtra = "source ~/.p10k.zsh";
       zplug = {
         enable = true;
         plugins = [
-          {name = "zsh-users/zsh-autosuggestions";} # Simple plugin installation
+          {
+            name = "zsh-users/zsh-autosuggestions";
+          } # Simple plugin installation
           {
             name = "romkatv/powerlevel10k";
           } # Installations with additional options. For the list of options, please refer to Zplug README.
