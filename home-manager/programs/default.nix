@@ -23,7 +23,8 @@ in {
     kind
     kubectl
     kubectx
-    helm
+    kubernetes-helm-wrapped
+    calicoctl
 
     htop
     neofetch

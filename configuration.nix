@@ -2,7 +2,6 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {
-  config,
   lib,
   pkgs,
   ...
@@ -13,18 +12,23 @@
   ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+  };
+
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "broadcom-sta"
     ];
 
-  networking.hostName = "dex"; # Define your hostname.
-  networking.networkmanager = {
-    enable = true; # Easiest to use and most distros use this by default.
-    dns = "default"; # Use NetworkManager's built-in DNS functionality.kkjjj
-    wifi.powersave = false;
+  networking = {
+    hostName = "dex"; # Define your hostname.
+    networkmanager = {
+      enable = true; # Easiest to use and most distros use this by default.
+      dns = "default"; # Use NetworkManager's built-in DNS functionality.kkjjj
+      wifi.powersave = false;
+    };
   };
 
   # Set your time zone.
@@ -35,7 +39,18 @@
   # Enable the flakes feature and the accompanying new nix command line tool:
   nix.settings.experimental-features = ["nix-command" "flakes"];
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+
+  services = {
+    xserver = {
+      enable = true;
+      xkb.layout = "us";
+      xkb.options = "eurosign:e,caps:escape";
+    };
+
+    libinput.enable = true;
+
+    openssh.enable = true;
+  };
 
   xdg.portal = {
     enable = true;
@@ -43,9 +58,7 @@
   };
 
   # Configure keymap in X11
-  services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
-
+  #
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
@@ -59,19 +72,26 @@
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
-  services.libinput.enable = true;
 
   users.users.dchoi = {
     isNormalUser = true;
-    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "docker"]; # Enable ‘sudo’ for the user.
     shell = pkgs.zsh;
   };
 
-  programs.zsh.enable=true;
-
-  security.polkit.enable = true;
-  security.pam.services.swaylock = {
-    text = "auth include login";
+  security = {
+    polkit.enable = true;
+    pam.services.swaylock = {
+      text = "auth include login";
+    };
+    #    wrappers = {
+    #      rootlesskit = {
+    #        owner = "root";
+    #        group = "root";
+    #        capabilities = "cap_net_bind_services=+ep";
+    #        source = "${pkgs.rootlesskit.out}/bin/rootlesskit";
+    #      };
+    #    };
   };
 
   # List packages installed in system profile. To search, run:
@@ -93,13 +113,16 @@
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  programs.mtr.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
-  programs.sway.enable = true;
 
+  programs = {
+    zsh.enable = true;
+    mtr.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    sway.enable = true;
+  };
   # Fonts
   fonts.packages = with pkgs; [
     fira-code
@@ -118,7 +141,15 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  virtualisation = {
+    docker = {
+      enable = true;
+      rootless = {
+        enable = true;
+        setSocketVariable = true;
+      };
+    };
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
