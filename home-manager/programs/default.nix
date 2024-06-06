@@ -16,6 +16,7 @@ in {
     nvim
 
     # dev
+    just
     go
     rustup
 
@@ -24,6 +25,7 @@ in {
     kubectl
     kubectx
     kubernetes-helm-wrapped
+    kustomize
     calicoctl
 
     htop
