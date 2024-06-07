@@ -121,8 +121,11 @@
       enable = true;
       enableSSHSupport = true;
     };
-    sway.enable = true;
+    sway = {
+      enable = true;
+    };
   };
+
   # Fonts
   fonts.packages = with pkgs; [
     fira-code

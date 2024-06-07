@@ -94,6 +94,9 @@ in {
     usbutils # lsusb
 
     chromium
+
+    font-awesome
+    noto-fonts-emoji
   ];
 
   wayland.windowManager.sway = {
@@ -140,7 +143,6 @@ in {
       clock24 = true;
       shell = "/etc/profiles/per-user/dchoi/bin/zsh";
     };
-
     autojump.enable = true;
 
     alacritty = {
