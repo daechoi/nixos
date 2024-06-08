@@ -10,7 +10,7 @@
       };
       diagnostics = {
         statix.enable = true;
-        yamllint.enable = true;
+        #        yamllint.enable = true;
       };
       formatting = {
         alejandra.enable = true;
