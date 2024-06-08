@@ -97,6 +97,9 @@ in {
 
     font-awesome
     noto-fonts-emoji
+
+    swaylock
+    swayidle
   ];
 
   wayland.windowManager.sway = {
@@ -120,6 +123,33 @@ in {
     };
   };
 
+  services = {
+    swayidle = {
+      enable = true;
+      timeouts = [
+        {
+          timeout = 5;
+          command = "${pkgs.swaylock}/bin/swaylock -fF";
+        }
+        {
+          timeout = 10;
+          command = "hyprctl dispatch dpms off";
+          resumeCommand = "hyprctl dispatch dpms on";
+        }
+      ];
+      events = [
+        {
+          event = "before-sleep";
+          command = "${pkgs.swaylock}/bin/swaylock -fF";
+        }
+        {
+          event = "lock";
+          command = "lock";
+        }
+      ];
+    };
+  };
+
   # basic configuration of git, please change to your own
   programs = {
     git = {
@@ -133,16 +163,86 @@ in {
       };
     };
 
+    swaylock = {
+      enable = true;
+      settings = {
+        mode = "fancy";
+      };
+    };
+
     chromium.enable = true;
 
     tmux = {
       enable = true;
       keyMode = "vi";
-      shortcut = "a";
+      prefix = "M-a";
       terminal = "xterm-256color-italic";
-      clock24 = true;
-      shell = "/etc/profiles/per-user/dchoi/bin/zsh";
+      shell = "${pkgs.zsh}/bin/zsh";
+      mouse = true;
+      customPaneNavigationAndResize = false;
+      extraConfig = ''
+        unbind C-b
+        set-option -g prefix M-a
+        set -g default-terminal xterm-256color-italic
+        bind C-a send-prefix
+
+        bind-key -r k select-pane -U
+        bind-key -r j select-pane -D
+        bind-key -r h select-pane -L
+        bind-key -r l select-pane -R
+
+
+        # resize panes with VIM nav keys
+        bind -r C-h resize-pane -L
+        bind -r C-j resize-pane -D
+        bind -r C-k resize-pane -U
+        bind -r C-l resize-pane -R
+
+
+        set-option -g status "on"
+        set-option -g status-style bg=colour237,fg=colour223 # bg=bg1, fg=fg1
+        set-window-option -g window-status-style bg=colour214,fg=colour237 # bg=yellow, fg=bg1
+        set-window-option -g window-status-activity-style bg=colour237,fg=colour248 # bg=bg1, fg=fg3
+
+        # active window title colors
+        set-window-option -g window-status-current-style bg=red,fg=colour237 # fg=bg1
+
+        # pane border
+        set-option -g pane-active-border-style fg=colour250 #fg2
+        set-option -g pane-border-style fg=colour237 #bg1
+
+        # message infos
+        set-option -g message-style bg=colour239,fg=colour223 # bg=bg2, fg=fg1
+        # writing commands inactive
+        set-option -g message-command-style bg=colour239,fg=colour223 # bg=fg3, fg=bg1
+
+        # pane number display
+        set-option -g display-panes-active-colour colour250 #fg2
+        set-option -g display-panes-colour colour237 #bg1
+
+        # clock
+        set-window-option -g clock-mode-colour colour109 #blue
+
+        # bell
+        set-window-option -g window-status-bell-style bg=colour167,fg=colour235 # bg=red, fg=bg
+
+        # Theme settings mixed with colors (unfortunately, but there is no cleaner way)
+        set-option -g status-justify "left"
+        set-option -g status-left-style none
+        set-option -g status-left-length "80"
+        set-option -g status-right-style none
+        set-option -g status-right-length "80"
+        set-window-option -g window-status-separator ""
+
+        set-option -g status-left "#[bg=colour241,fg=colour248] #S #[bg=colour237,fg=colour241,nobold,noitalics,nounderscore]"
+        set-option -g status-right "#[bg=colour237,fg=colour239 nobold, nounderscore, noitalics]#[bg=colour239,fg=colour246] %Y-%m-%d  %H:%M #[bg=colour239,fg=colour248,nobold,noitalics,nounderscore]#[bg=colour248,fg=colour237] #h "
+
+        set-window-option -g window-status-current-format "#[bg=colour214,fg=colour237,nobold,noitalics,nounderscore]#[bg=colour214,fg=colour239] #I #[bg=colour214,fg=colour239,bold] #W #[bg=colour237,fg=colour214,nobold,noitalics,nounderscore]"
+        set-window-option -g window-status-format "#[bg=colour239,fg=colour237,noitalics]#[bg=colour239,fg=colour223] #I #[bg=colour239,fg=colour223] #W #[bg=colour237,fg=colour239,noitalics]"
+        # set -g status-right "#(/usr/bin/env bash $HOME/.tmux/kube-tmux/kube.tmux 250 red cyan)"
+      '';
     };
+
     autojump.enable = true;
 
     alacritty = {
@@ -164,7 +264,7 @@ in {
       #custom settings
       settings = {
         add_newline = false;
-        aws.disabled = true;
+        aws.disabled = false;
         gcloud.disabled = true;
         line_break.disabled = true;
       };

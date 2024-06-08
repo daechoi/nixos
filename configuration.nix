@@ -103,8 +103,6 @@
     curl
 
     sway
-    swaylock
-    swayidle
     wl-clipboard
     mako
     wofi
