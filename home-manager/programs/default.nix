@@ -27,6 +27,7 @@ in {
     kubernetes-helm-wrapped
     kustomize
     calicoctl
+    envsubst
 
     htop
     neofetch
