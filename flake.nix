@@ -18,7 +18,12 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, nixvim, ...}: {
+  outputs = inputs @ {
+    nixpkgs,
+    home-manager,
+    nixvim,
+    ...
+  }: {
     nixosConfigurations = {
       dex = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -26,14 +31,16 @@
           # Import the previous configuration.nix we used,
           # so the old configuration file still takes effect
           ./configuration.nix
-	  home-manager.nixosModules.home-manager
-	  {
-	    home-manager.useGlobalPkgs = true;
-	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = {inherit inputs;};
-	    home-manager.users.dchoi = import ./home-manager;
-	  }
-      	];
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = {inherit inputs;};
+              users.dchoi = import ./home-manager;
+            };
+          }
+        ];
       };
     };
   };
