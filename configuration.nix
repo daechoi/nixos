@@ -27,6 +27,7 @@
     networkmanager = {
       enable = true; # Easiest to use and most distros use this by default.
       dns = "default"; # Use NetworkManager's built-in DNS functionality.kkjjj
+      wifi.scanRandMacAddress = false;
       wifi.powersave = false;
     };
   };
@@ -113,6 +114,7 @@
   # started in user sessions.
 
   programs = {
+    nm-applet.enable = true;
     zsh.enable = true;
     mtr.enable = true;
     gnupg.agent = {

@@ -2,13 +2,7 @@
   globals.mapleader = ",";
 
   keymaps = [
-    # <C-c> instead of pressing esc just because
-    {
-      mode = "i";
-      key = "fj";
-      action = "<Esc>";
-    }
-
+    # General maps
     {
       mode = "n";
       key = "<leader>f";
@@ -306,6 +300,13 @@
       key = "<leader>D";
       action = ''"_d'';
       options = {desc = "Delete to void register";};
+    }
+
+    # <C-c> instead of pressing esc just because
+    {
+      mode = "i";
+      key = "fj";
+      action = "<Esc>";
     }
 
     {
