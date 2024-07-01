@@ -101,6 +101,8 @@ in {
 
     swaylock
     swayidle
+
+    wl-clipboard
   ];
 
   services = {
