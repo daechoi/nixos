@@ -140,6 +140,8 @@ in {
       extraConfig = {
         core.editor = "vim";
         credential.helper = "cache";
+        init.defaultBranch = "main";
+        pull.rebase = true;
       };
     };
 
