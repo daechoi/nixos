@@ -103,27 +103,6 @@ in {
     swayidle
   ];
 
-  wayland.windowManager.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-
-    config = {
-      terminal = "alacritty";
-      menu = "wofi --show run";
-      bars = [
-        {
-          fonts.size = 10.0;
-          position = "top";
-        }
-      ];
-#      output = {
-#        eDP-1 = {
-#          scale = "1";
-#        };
-#      };
-    };
-  };
-
   services = {
     swayidle = {
       enable = true;
