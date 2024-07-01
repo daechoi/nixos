@@ -262,6 +262,9 @@ in {
         vim = "nvim";
         g = "git";
         k = "kubectl";
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        "...." = "cd ../../..";
       };
       history = {
         size = 10000;
@@ -270,8 +273,17 @@ in {
 
       envExtra = "export TERM=xterm-256color-italic";
       initExtra = ''
+        function lll() {
+          tree -aC -L 3 -I '.git|node_modules|target' --dirsfirst "$@" | less -FRNX;
+        }
+        function llll() {
+          tree -aC -L 4 -I '.git|node_modules|target' --dirsfirst "$@" | less -FRNX;
+        }
+        function lllll() {
+          tree -aC -L 5 -I '.git|node_modules|target' --dirsfirst "$@" | less -FRNX;
+        }
 
-        source ~/.p10k.zsh";
+        source ~/.p10k.zsh;
       '';
       zplug = {
         enable = true;

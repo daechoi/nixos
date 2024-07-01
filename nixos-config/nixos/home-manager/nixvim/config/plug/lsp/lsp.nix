@@ -4,6 +4,7 @@
     lsp = {
       enable = true;
       servers = {
+        bashls = {enable = true;};
         eslint = {enable = true;};
         html = {enable = true;};
         lua-ls = {enable = true;};
@@ -11,7 +12,11 @@
         marksman = {enable = true;};
         pyright = {enable = true;};
         gopls = {enable = true;};
-        rust-analyzer = {enable = true;};
+        rust-analyzer = {
+          enable = true;
+          installCargo = true;
+          installRustc = true;
+        };
         terraformls = {enable = true;};
         tsserver = {enable = false;};
         yamlls = {
