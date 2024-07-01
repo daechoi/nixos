@@ -22,7 +22,7 @@ client.background       #ffffff
 default_border pixel 1
 
 # Wallpaper
-output * bg /home/simon/nixos-config/wallpaper.png fill
+output * bg /home/dchoi/.infra/nixos-config/wallpaper.png fill
 
 # Key bindings
     # Start a terminal

@@ -11,6 +11,7 @@
         marksman = {enable = true;};
         pyright = {enable = true;};
         gopls = {enable = true;};
+        rust-analyzer = {enable = true;};
         terraformls = {enable = true;};
         tsserver = {enable = false;};
         yamlls = {
