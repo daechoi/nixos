@@ -1,4 +1,8 @@
-{ lib, pkgs, ... }: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     ./ssd.nix
   ];
@@ -18,21 +22,9 @@
 
   # Fix TRRS headphones missing a mic
   # https://community.frame.work/t/headset-microphone-on-linux/12387/3
-  boot.extraModprobeConfig = ''
-    options snd-hda-intel model=dell-headset-multi
-  '';
 
   # For fingerprint support
   #services.fprintd.enable = lib.mkDefault true;
-
-  # Custom udev rules
-  services.udev.extraRules = ''
-    # Fix headphone noise when on powersave
-    # https://community.frame.work/t/headphone-jack-intermittent-noise/5246/55
-    SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0xa0e0", ATTR{power/control}="on"
-    # Ethernet expansion card support
-    #ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="8156", ATTR{power/autosuspend}="20"
-  '';
 
   # Mis-detected by nixos-generate-config
   # https://github.com/NixOS/nixpkgs/issues/171093

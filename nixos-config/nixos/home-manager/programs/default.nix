@@ -269,7 +269,10 @@ in {
       };
 
       envExtra = "export TERM=xterm-256color-italic";
-      initExtra = "source ~/.p10k.zsh";
+      initExtra = ''
+
+        source ~/.p10k.zsh";
+      '';
       zplug = {
         enable = true;
         plugins = [
