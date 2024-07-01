@@ -236,6 +236,7 @@ in {
         env.TERM = "xterm-256color-italic";
         font = {
           size = 12;
+          normal.family = "MesloLGS NF";
         };
         scrolling.multiplier = 5;
         selection.save_to_clipboard = true;
