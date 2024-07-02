@@ -271,6 +271,7 @@ in {
         ".." = "cd ..";
         "..." = "cd ../..";
         "...." = "cd ../../..";
+        psql = "nix shell nixpkgs#postgresql --command psql";
       };
       history = {
         size = 10000;
@@ -290,6 +291,7 @@ in {
         }
 
         source ~/.p10k.zsh;
+        export PATH=$PATH:/home/dchoi/.cargo/bin;
       '';
       zplug = {
         enable = true;
