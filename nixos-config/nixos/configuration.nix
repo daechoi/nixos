@@ -55,10 +55,27 @@
 
   time.timeZone = "America/New_York";
 
+  virtualisation.docker.enable = true;
   nix.settings.experimental-features = ["nix-command" "flakes"];
-  environment.sessionVariables = {
-    XDG_CONFIG_HOME = "\${HOME}/.config";
-    XCURSOR_SIZE = "24";
+  environment = {
+    sessionVariables = {
+      XDG_CONFIG_HOME = "\${HOME}/.config";
+      XCURSOR_SIZE = "24";
+    };
+    variables = {
+      PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+    };
+    systemPackages = with pkgs; [
+      acpi
+      vim
+      wget
+      tmux
+      freshfetch
+      gcc
+      google-chrome
+      pkg-config
+      openssl
+    ];
   };
 
   nixpkgs.config.allowUnfreePredicate = pkg:
@@ -68,19 +85,9 @@
 
   users.users.dchoi = {
     isNormalUser = true;
-    extraGroups = ["wheel"];
+    extraGroups = ["wheel" "docker"];
     shell = pkgs.zsh;
   };
-
-  environment.systemPackages = with pkgs; [
-    acpi
-    vim
-    wget
-    tmux
-    freshfetch
-    gcc
-    google-chrome
-  ];
 
   programs = {
     mtr.enable = true;
@@ -112,6 +119,7 @@
       };
     };
   };
+  sound.mediaKeys.enable = true;
 
   system.stateVersion = "24.05";
 }

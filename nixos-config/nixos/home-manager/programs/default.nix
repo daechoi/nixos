@@ -40,6 +40,7 @@ in {
     p7zip
 
     # utils
+    libqalculate # A powerful and easy to use desktop calculator
     autojump
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
