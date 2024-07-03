@@ -12,13 +12,37 @@
         marksman = {enable = true;};
         pyright = {enable = true;};
         gopls = {enable = true;};
-        rust-analyzer = {
-          enable = true;
-          installCargo = true;
-          installRustc = true;
-        };
         terraformls = {enable = true;};
-        tsserver = {enable = false;};
+        tsserver = {
+          enable = true;
+          filetypes = ["javascript" "javascriptreact" "javascript.jsx" "typescript" "typescriptreact" "typescript.tsx"];
+          extraOptions = {
+            settings = {
+              javascript = {
+                inlayHints = {
+                  includeInlayEnumMemberValueHints = true;
+                  includeInlayFunctionLikeReturnTypeHints = true;
+                  includeInlayFunctionParameterTypeHints = true;
+                  includeInlayParameterNameHints = true;
+                  includeInlayParameterNameHintsWhenArgumentMatchesName = true;
+                  includeInlayPropertyDeclarationTypeHints = true;
+                  includeInlayVariableTypeHints = true;
+                };
+              };
+              typescript = {
+                inlayHints = {
+                  includeInlayEnumMemberValueHints = true;
+                  includeInlayFunctionLikeReturnTypeHints = true;
+                  includeInlayFunctionParameterTypeHints = true;
+                  includeInlayParameterNameHints = true;
+                  includeInlayParameterNameHintsWhenArgumentMatchesName = true;
+                  includeInlayPropertyDeclarationTypeHints = true;
+                  includeInlayVariableTypeHints = true;
+                };
+              };
+            };
+          };
+        };
         yamlls = {
           enable = true;
         };
@@ -75,6 +99,7 @@
         };
       };
     };
+    rust-tools.enable = true;
   };
   extraConfigLua = ''
     local _border = "rounded"

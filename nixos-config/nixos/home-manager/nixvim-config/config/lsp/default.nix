@@ -11,7 +11,6 @@
         kotlin-language-server.enable = true;
         nixd.enable = true;
         prolog-ls.enable = true;
-#	rust_analyzer.enable = true;
         ruff-lsp.enable = true;
       };
       keymaps.lspBuf = {

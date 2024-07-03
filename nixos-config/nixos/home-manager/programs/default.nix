@@ -47,6 +47,7 @@ in {
     yq-go # yaml processor https://github.com/mikefarah/yq
     eza # A modern replacement for ‘ls’
     fzf # A command-line fuzzy finder
+    direnv # An environment switcher for the shell
 
     # networking tools
     mtr # A network diagnostic tool
@@ -291,7 +292,8 @@ in {
         }
 
         source ~/.p10k.zsh;
-        export PATH=$PATH:/home/dchoi/.cargo/bin;
+        export PATH=$PATH:/home/dchoi/.cargo/bin:/home/dchoi/.scripts/bin;
+        eval "$(direnv hook zsh)";
       '';
       zplug = {
         enable = true;
