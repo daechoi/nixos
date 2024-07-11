@@ -19,7 +19,8 @@
 
       #Define your networks here
       #Syntax :
-      networks.ChoiFL-5G.psk = "guguplex";
+      #      networks.ChoiFL-5G.psk = "guguplex";
+      networks.SurClub_Guest = {};
     };
   };
 }

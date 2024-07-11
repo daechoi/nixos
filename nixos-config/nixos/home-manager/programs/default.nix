@@ -28,6 +28,7 @@ in {
     kustomize
     calicoctl
     envsubst
+    doctl
 
     htop
     neofetch
@@ -48,6 +49,8 @@ in {
     eza # A modern replacement for ‘ls’
     fzf # A command-line fuzzy finder
     direnv # An environment switcher for the shell
+    bunyan-rs # A JSON CLI logger:w
+    networkmanager
 
     # networking tools
     mtr # A network diagnostic tool
@@ -256,7 +259,6 @@ in {
         line_break.disabled = true;
       };
     };
-
     zsh = {
       enable = true;
       enableCompletion = true;
