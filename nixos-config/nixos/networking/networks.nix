@@ -5,8 +5,8 @@
 }: {
   networking = {
     hostName = "gram";
-
     firewall.enable = false;
+    #networkmanager.enable = true;
     wireless = {
       enable = true;
       userControlled.enable = true;
@@ -19,8 +19,11 @@
 
       #Define your networks here
       #Syntax :
-      #      networks.ChoiFL-5G.psk = "guguplex";
-      networks.SurClub_Guest = {};
+      networks."ChoiFL-5G" = {
+        psk = "guguplex";
+        hidden = true;
+      };
+      #      networks.SurClub_Guest = {};
     };
   };
 }

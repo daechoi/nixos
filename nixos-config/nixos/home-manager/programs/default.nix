@@ -50,7 +50,7 @@ in {
     fzf # A command-line fuzzy finder
     direnv # An environment switcher for the shell
     bunyan-rs # A JSON CLI logger:w
-    networkmanager
+    #    networkmanager
 
     # networking tools
     mtr # A network diagnostic tool
