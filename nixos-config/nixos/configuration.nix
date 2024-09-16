@@ -71,6 +71,7 @@
       wget
       tmux
       freshfetch
+
       gcc
       google-chrome
       pkg-config

@@ -24,6 +24,10 @@
         hidden = true;
       };
       #      networks.SurClub_Guest = {};
+      #      networks.NLCFellowship.psk = "Jesuslovesyou963";
+      #      networks.Dae.psk = "guguplex";
+      #networks.NLCMAINV3.psk = "fc963fc963";
+      #      networks.advantage.psk = "RepairReplace";
     };
   };
 }

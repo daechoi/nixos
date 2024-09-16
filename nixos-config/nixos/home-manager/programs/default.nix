@@ -19,7 +19,12 @@ in {
     just
     go
     rustup
+    cmake
 
+    go-swag
+    open-policy-agent
+
+    gnumake
     #kube
     kind
     kubectl
