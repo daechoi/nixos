@@ -113,6 +113,7 @@ in {
     swayidle
 
     wl-clipboard
+    quickemu
   ];
 
   services = {

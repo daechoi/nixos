@@ -33,11 +33,17 @@
   ];
 
   hardware = {
-    bluetooth.enable = true;
-    bluetooth.settings.Input = {
-      ClassicBondedOnly = false;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      input = {
+        General = {
+          UserspaceHID = true;
+        };
+      };
     };
   };
+
   fonts.packages = with pkgs; [
     fira-code
     fira
@@ -76,6 +82,10 @@
       google-chrome
       pkg-config
       openssl
+
+      bluez
+      bluez-tools
+      libinput
     ];
   };
 

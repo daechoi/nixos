@@ -219,4 +219,11 @@ bar {
     }
 }
 
+set $laptop eDP-1
+set $desktop HDMI-A-1
+bindswitch --reload --locked lid:on output $laptop disable;output $desktop mode 3840x2160@59.98Hz 
+bindswitch --reload --locked lid:off output $laptop enable
+
+exec_always ~/.config/sway/clamshell.sh
+
 include /usr/local/etc/sway/config.d/*
