@@ -33,7 +33,7 @@
 		home-manager = {
 			useGlobalPkgs = true;
 			useUserPackages = true;
-			users.dchoi = import ./home.nix;
+			users.dchoi = import ./home-manager;
 		};
 	  }
         ];
