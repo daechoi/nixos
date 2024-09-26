@@ -19,6 +19,14 @@
 	zsh
   ];
 
+  users.users.dchoi = {
+	extraGroups = ["wheel" "docker"];
+	shell = pkgs.zsh;
+  };
+
+  programs = {
+	zsh.enable=true;
+  };
   nix.settings.experimental-features = ["nix-command" "flakes"];
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

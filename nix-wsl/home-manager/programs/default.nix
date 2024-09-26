@@ -22,7 +22,6 @@ in {
     cmake
 
     go-swag
-    open-policy-agent
 
     gnumake
     #kube
@@ -104,44 +103,12 @@ in {
     pciutils # lspci
     usbutils # lsusb
 
-    chromium
-
     font-awesome
     noto-fonts-emoji
-
-    swaylock
-    swayidle
 
     wl-clipboard
     quickemu
   ];
-
-  services = {
-    swayidle = {
-      enable = true;
-      timeouts = [
-        {
-          timeout = 300;
-          command = "${pkgs.swaylock}/bin/swaylock -fF";
-        }
-        {
-          timeout = 600;
-          command = "hyprctl dispatch dpms off";
-          resumeCommand = "hyprctl dispatch dpms on";
-        }
-      ];
-      events = [
-        {
-          event = "before-sleep";
-          command = "${pkgs.swaylock}/bin/swaylock -fF";
-        }
-        {
-          event = "lock";
-          command = "lock";
-        }
-      ];
-    };
-  };
 
   # basic configuration of git, please change to your own
   programs = {
@@ -157,15 +124,6 @@ in {
         pull.rebase = true;
       };
     };
-
-    swaylock = {
-      enable = true;
-      settings = {
-        mode = "fancy";
-      };
-    };
-
-    chromium.enable = true;
 
     tmux = {
       enable = true;
@@ -265,12 +223,12 @@ in {
         line_break.disabled = true;
       };
     };
+
     zsh = {
       enable = true;
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-
       shellAliases = {
         ll = "ls -l";
         update = "sudo nixos-rebuild switch";
@@ -282,6 +240,7 @@ in {
         "...." = "cd ../../..";
         psql = "nix shell nixpkgs#postgresql --command psql";
       };
+
       history = {
         size = 10000;
         path = "${config.xdg.dataHome}/zsh/history";
