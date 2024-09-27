@@ -128,14 +128,14 @@ in {
     tmux = {
       enable = true;
       keyMode = "vi";
-      prefix = "M-a";
+      prefix = "C-a";
       terminal = "xterm-256color-italic";
       shell = "${pkgs.zsh}/bin/zsh";
       mouse = true;
       customPaneNavigationAndResize = false;
       extraConfig = ''
         unbind C-b
-        set-option -g prefix M-a
+        set-option -g prefix C-a
         set -g default-terminal xterm-256color-italic
         bind C-a send-prefix
 
