@@ -2,7 +2,7 @@
   plugins.none-ls = {
     enable = true;
     enableLspFormat = true;
-    updateInInsert = false;
+    settings.update_in_insert = false;
     sources = {
       code_actions = {
         gitsigns.enable = true;
@@ -10,13 +10,12 @@
       };
       diagnostics = {
         statix.enable = true;
-        #        yamllint.enable = true;
       };
       formatting = {
         alejandra.enable = true;
         black = {
           enable = true;
-          withArgs = ''
+          settings = ''
             {
               extra_args = { "--fast" },
             }
@@ -25,7 +24,7 @@
         prettier = {
           enable = true;
           disableTsServerFormatter = true;
-          withArgs = ''
+          settings = ''
             {
               extra_args = { "--no-semi", "--single-quote" },
             }
