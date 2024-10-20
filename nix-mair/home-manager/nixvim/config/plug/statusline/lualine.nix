@@ -31,7 +31,8 @@ in {
         };
       };
     };
-/*    settings.sections = {
+    /*
+    settings.sections = {
       lualine_a = [
         {
           name = "mode";
@@ -88,7 +89,6 @@ in {
           };
         }
       ];
-      */
       lualine_x = [
         {
           name = "filetype";
@@ -136,5 +136,6 @@ in {
         }
       ];
     };
+    */
   };
 }
