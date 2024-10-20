@@ -74,6 +74,7 @@ in {
     # with more details log output
     nix-output-monitor
 
+    devenv
     # productivity
     hugo # static site generator
     glow # markdown previewer in terminal
