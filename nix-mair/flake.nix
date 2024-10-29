@@ -51,11 +51,11 @@
             mouse_action1 = "move";
             mouse_action2 = "resize";
             layout = "bsp";
-            top_padding = 5;
-            bottom_padding = 5;
-            left_padding = 5;
-            right_padding = 5;
-            window_gap = 5;
+            top_padding = 2;
+            bottom_padding = 2;
+            left_padding = 2;
+            right_padding = 2;
+            window_gap = 2;
           };
 
           extraConfig = ''
