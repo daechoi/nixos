@@ -100,6 +100,7 @@ in {
 
     tmux = {
       enable = true;
+      sensibleOnTop = false;
       keyMode = "vi";
       prefix = "M-a";
       terminal = "xterm-256color-italic";
