@@ -194,7 +194,10 @@ in {
         path = "${config.xdg.dataHome}/zsh/history";
       };
 
-      envExtra = "export TERM=xterm-256color-italic";
+      envExtra = ''
+        export TERM=xterm-256color-italic
+        export CLICOLOR=1
+      '';
       initExtra = ''
         function lll() {
           tree -aC -L 3 -I '.git|node_modules|target' --dirsfirst "$@" | less -FRNX;
