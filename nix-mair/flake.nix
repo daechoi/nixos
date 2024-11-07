@@ -36,8 +36,8 @@
           package = pkgs.yabai;
           enableScriptingAddition = true;
           config = {
-            focus_follows_mouse = "autoraise";
-            mouse_follows_focus = "off";
+            #            focus_follows_mouse = "autoraise";
+            #            mouse_follows_focus = "off";
             window_placement = "second_child";
             window_opacity = "off";
             window_opacity_duration = "0.0";
