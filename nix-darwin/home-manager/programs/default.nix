@@ -79,7 +79,6 @@ in {
     glow # markdown previewer in terminal
 
     google-chrome
-    iterm2
     #    font-awesome
     #    noto-fonts-emoji
   ];
@@ -180,7 +179,7 @@ in {
       syntaxHighlighting.enable = true;
       shellAliases = {
         ll = "ls -l";
-        update = "darwin-rebuild switch --flake /Users/dchoi/.nixos/nix-mair";
+        update = "darwin-rebuild switch --flake /Users/dchoi/.nixos/nix-darwin";
         vim = "nvim";
         g = "git";
         k = "kubectl";
@@ -210,8 +209,9 @@ in {
           tree -aC -L 5 -I '.git|node_modules|target' --dirsfirst "$@" | less -FRNX;
         }
 
-        source ~/.p20k.zsh;
+        # source ~/.p20k.zsh;
         export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin;
+        export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
         eval "$(direnv hook zsh)";
       '';
       zplug = {
