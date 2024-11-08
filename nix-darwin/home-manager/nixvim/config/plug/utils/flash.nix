@@ -2,14 +2,14 @@
   plugins.flash = {
     enable = true;
     settings = {
+      labels = "asdfghjklqwertyuiopzxcvbnm";
       jump = {
         autojump = true;
       };
-    search = {
-      mode = "fuzzy";
-    };
+      search = {
+        mode = "fuzzy";
+      };
 
-      labels = "asdfghjklqwertyuiopzxcvbnm";
       label = {
         uppercase = false;
         rainbow = {

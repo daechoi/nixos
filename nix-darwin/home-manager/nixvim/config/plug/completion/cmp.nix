@@ -19,6 +19,8 @@
       };
     };
 
+    emmet = {enable = true;};
+
     cmp-buffer = {enable = true;};
 
     cmp-emoji = {enable = true;};
@@ -49,6 +51,7 @@
           {name = "nvim_lua";}
           {name = "path";}
           {name = "copilot";}
+          {name = "emmet_vim";}
         ];
 
         formatting = {

@@ -109,7 +109,6 @@ in {
             enabled = true;
             inlay_hints = {
               background = true;
-              enabled = true;
             };
             underlines = {
               errors = ["underline"];

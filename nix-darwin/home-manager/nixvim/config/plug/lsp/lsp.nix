@@ -1,8 +1,5 @@
 {
   plugins = {
-    rustaceanvim = {
-      enable = true;
-    };
     lsp-format = {enable = true;};
     lsp = {
       enable = true;
@@ -10,18 +7,13 @@
         bashls = {enable = true;};
         eslint = {enable = true;};
         html = {enable = true;};
-        lua-ls = {enable = true;};
-        nil-ls = {enable = true;};
+        lua_ls = {enable = true;};
+        nil_ls = {enable = true;};
         marksman = {enable = true;};
         pyright = {enable = true;};
         gopls = {enable = true;};
-        #        rust-analyzer = {
-        #  enable = true;
-        #  installCargo = true;
-        #  installRustc = true;
-        #};
         terraformls = {enable = true;};
-        tsserver = {
+        ts_ls = {
           enable = true;
           filetypes = ["javascript" "javascriptreact" "javascript.jsx" "typescript" "typescriptreact" "typescript.tsx"];
           extraOptions = {
@@ -107,6 +99,8 @@
         };
       };
     };
+    web-devicons.enable = true;
+    rust-tools.enable = true;
   };
   extraConfigLua = ''
     local _border = "rounded"
@@ -130,8 +124,5 @@
     require('lspconfig.ui.windows').default_options = {
       border = _border
     }
-
-    vim.lsp.inlay_hint.enable();
-
   '';
 }

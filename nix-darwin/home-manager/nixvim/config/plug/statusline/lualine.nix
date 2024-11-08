@@ -3,31 +3,36 @@
 in {
   plugins.lualine = {
     enable = true;
-    globalstatus = true;
-    disabledFiletypes = {
-      statusline = ["dashboard" "alpha" "starter"];
-    };
-    theme = {
-      normal = {
-        a = {
-          bg = "#b4befe";
-          fg = "#1c1d21";
+    settings = {
+      options = {
+        globalstatus = true;
+        theme = {
+          normal = {
+            a = {
+              bg = "#b4befe";
+              fg = "#1c1d21";
+            };
+            b = {
+              bg = "nil";
+            };
+            c = {
+              bg = "nil";
+            };
+            z = {
+              bg = "nil";
+            };
+            y = {
+              bg = "nil";
+            };
+          };
         };
-        b = {
-          bg = "nil";
-        };
-        c = {
-          bg = "nil";
-        };
-        z = {
-          bg = "nil";
-        };
-        y = {
-          bg = "nil";
+        disabled_filetypes = {
+          statusline = ["dashboard" "alpha" "starter"];
         };
       };
     };
-    sections = {
+    /*
+    settings.sections = {
       lualine_a = [
         {
           name = "mode";
@@ -131,5 +136,6 @@ in {
         }
       ];
     };
+    */
   };
 }
