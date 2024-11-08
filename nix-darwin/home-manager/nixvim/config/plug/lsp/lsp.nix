@@ -100,7 +100,7 @@
       };
     };
     web-devicons.enable = true;
-    rust-tools.enable = true;
+    rustaceanvim.enable = true;
   };
   extraConfigLua = ''
     local _border = "rounded"
