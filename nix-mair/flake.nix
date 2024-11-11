@@ -164,7 +164,10 @@
       programs.zsh.enable = true;
       system.configurationRevision = self.rev or self.dirtyRev or null;
       system.stateVersion = 4;
-      nixpkgs.hostPlatform = system;
+      nixpkgs = {
+        hostPlatform = system;
+        config.allowUnfree = true;
+      };
     };
   in {
     darwinConfigurations.mair = nix-darwin.lib.darwinSystem {
