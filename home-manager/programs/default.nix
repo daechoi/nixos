@@ -17,8 +17,6 @@ in {
 
     # dev
     just
-    go
-    rustup
 
     #kube
     kind
