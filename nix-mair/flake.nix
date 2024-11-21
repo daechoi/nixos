@@ -31,6 +31,17 @@
     configuration = {...}: {
       services = {
         nix-daemon.enable = true;
+        openssh = {
+          enable = true;
+          ports = [22];
+          settings = {
+            PasswordAuthentication = false;
+            AllowUsers = null; # Allows all users by default. Can be [ "user1" "user2" ]
+            UseDns = true;
+            X11Forwarding = false;
+            PermitRootLogin = "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
+          };
+        };
         yabai = {
           enable = true;
           package = pkgs.yabai;
@@ -161,7 +172,10 @@
         };
       };
       nix.settings.experimental-features = "nix-command flakes";
-      programs.zsh.enable = true;
+      programs = {
+        zsh.enable = true;
+      };
+
       system.configurationRevision = self.rev or self.dirtyRev or null;
       system.stateVersion = 4;
       nixpkgs = {
