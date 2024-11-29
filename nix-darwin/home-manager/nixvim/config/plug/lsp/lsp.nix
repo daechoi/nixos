@@ -1,5 +1,6 @@
 {
   plugins = {
+    dap.enable = true;
     lsp-format = {enable = true;};
     lsp = {
       enable = true;
