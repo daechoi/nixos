@@ -108,7 +108,7 @@ in {
         haskell.haskell
 
         # Copilot
-        github.copilot
+        #        github.copilot
 
         # Misc
         mkhl.direnv
