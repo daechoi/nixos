@@ -74,11 +74,17 @@ in {
     # with more details log output
     nix-output-monitor
 
+    damon
+
     devenv
     # productivity
     hugo # static site generator
     glow # markdown previewer in terminal
 
+    docker-compose
+    podman-compose
+    podman-tui
+    podman
     #    font-awesome
     #    noto-fonts-emoji
   ];

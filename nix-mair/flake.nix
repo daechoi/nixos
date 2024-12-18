@@ -32,6 +32,31 @@
     configuration = {pkgs, ...}: {
       services = {
         nix-daemon.enable = true;
+        /*
+          nomad = {
+          enable = true;
+          package = pkgs.nomad_1_6;
+          extraSettingsPlugins = [pkgs.nomad-driver-podman];
+
+          enableDocker = true;
+
+          dropPrivileges = false;
+          settings = {
+            client.enabled = true;
+            server = {
+              enabled = true;
+              bootstrap_expect = 1;
+            };
+            plugin = [
+              {
+                nomad-driver-podman = {
+                  config = {};
+                };
+              }
+            ];
+          };
+        };
+        */
         yabai = {
           enable = true;
           package = pkgs.yabai;
