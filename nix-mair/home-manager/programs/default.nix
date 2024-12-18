@@ -85,6 +85,7 @@ in {
     podman-compose
     podman-tui
     podman
+    qemu
     #    font-awesome
     #    noto-fonts-emoji
   ];
