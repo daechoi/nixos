@@ -86,6 +86,9 @@ in {
     podman-tui
     podman
     qemu
+    nomad
+
+    #nomad-driver-podman
     #    font-awesome
     #    noto-fonts-emoji
   ];
