@@ -81,6 +81,8 @@ in {
     hugo # static site generator
     glow # markdown previewer in terminal
 
+    colima
+    docker
     docker-compose
     podman-compose
     podman-tui
@@ -251,7 +253,7 @@ in {
         }
 
         source ~/.p20k.zsh;
-        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin;
+        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-packages/bin;
         eval "$(direnv hook zsh)";
       '';
       zplug = {
