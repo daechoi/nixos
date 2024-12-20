@@ -81,6 +81,7 @@ in {
     hugo # static site generator
     glow # markdown previewer in terminal
 
+    # virtualization
     colima
     docker
     docker-compose
@@ -90,6 +91,8 @@ in {
     qemu
     nomad
 
+    # shell
+    autojump
     #nomad-driver-podman
     #    font-awesome
     #    noto-fonts-emoji
