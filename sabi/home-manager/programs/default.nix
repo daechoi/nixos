@@ -91,9 +91,9 @@ in {
     podman-compose
     podman-tui
     podman
-    qemu
     nomad
 
+    qemu
     # shell
     autojump
     #nomad-driver-podman
