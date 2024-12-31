@@ -68,6 +68,9 @@ in {
     zstd
     gnupg
 
+    pandoc
+    tectonic
+
     # nix related
     #
     # it provides the command `nom` works just like `nix`
@@ -256,7 +259,7 @@ in {
         }
 
         source ~/.p20k.zsh;
-        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-global/bin;
+        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-packages/bin;
         eval "$(direnv hook zsh)";
       '';
       zplug = {
