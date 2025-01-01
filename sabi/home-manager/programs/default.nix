@@ -259,7 +259,7 @@ in {
         }
 
         source ~/.p20k.zsh;
-        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-packages/bin;
+        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-global/bin;
         eval "$(direnv hook zsh)";
       '';
       zplug = {
