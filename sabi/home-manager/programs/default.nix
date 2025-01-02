@@ -93,6 +93,8 @@ in {
     podman
     nomad
 
+    natscli
+
     qemu
     # shell
     autojump
