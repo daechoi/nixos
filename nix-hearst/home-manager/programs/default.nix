@@ -57,6 +57,8 @@ in {
     nmap # A utility for network discovery and security auditing
     ipcalc # it is a calculator for the IPv4/v6 addresses
 
+    gats
+
     # misc
     cowsay
     file
@@ -80,7 +82,6 @@ in {
 
     font-awesome
     noto-fonts-emoji
-
   ];
 
   # basic configuration of git, please change to your own
