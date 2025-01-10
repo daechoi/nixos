@@ -158,6 +158,8 @@
                        yabai -m window --toggle pip
 
              # cmd + shift - n : exec /System/Applications/Notes.app/Contents/MacOS/Notes
+
+
           '';
         };
       };
