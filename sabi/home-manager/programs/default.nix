@@ -16,6 +16,7 @@ in {
     nvim
 
     # dev
+    gcc
     #    gnumake
     #kube
     #    kind
