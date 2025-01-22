@@ -102,6 +102,7 @@ in {
     #nomad-driver-podman
     #    font-awesome
     #    noto-fonts-emoji
+    awscli
   ];
 
   # basic configuration of git, please change to your own
