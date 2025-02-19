@@ -3,17 +3,14 @@
     enable = true;
     settings = {
       logger = {
-        level = "warn"; # “off”, “error”, “warn”, “info”, “debug”, “trace”
+        level = "warn";
         floatPrecision = 0.01;
       };
-
       progress = {
         pollRate = 0;
         suppressOnInsert = true;
         ignoreDoneAlready = false;
         ignoreEmptyMessage = false;
-
-        # Use __lua to return a function
         clearOnDetach = {
           __lua = ''
             return function(client_id)
@@ -22,8 +19,6 @@
             end
           '';
         };
-
-        # Also use __lua for function
         notificationGroup = {
           __lua = ''
             return function(msg)
@@ -31,12 +26,10 @@
             end
           '';
         };
-
         ignore = [];
         lsp = {
           progressRingbufSize = 0;
         };
-
         display = {
           renderLimit = 16;
           doneTtl = 3;
@@ -52,14 +45,11 @@
           iconStyle = "Question";
           priority = 30;
           skipHistory = true;
-
-          # Must be returned as raw Lua code
           formatMessage = {
             __lua = ''
               return require("fidget.progress.display").default_format_message
             '';
           };
-
           formatAnnote = {
             __lua = ''
               return function(msg)
@@ -67,7 +57,6 @@
               end
             '';
           };
-
           formatGroupName = {
             __lua = ''
               return function(group)
@@ -75,7 +64,6 @@
               end
             '';
           };
-
           overrides = {
             rust_analyzer = {
               name = "rust-analyzer";
@@ -83,24 +71,18 @@
           };
         };
       };
-
       notification = {
         pollRate = 10;
-        filter = "info"; # “off”, “error”, “warn”, “info”, “debug”, “trace”
+        filter = "info";
         historySize = 128;
         overrideVimNotify = true;
-
-        # This must be raw Lua code returning a function
-        redirect = {
-          __lua = ''
-            return function(msg, level, opts)
-              if opts and opts.on_open then
-                return require("fidget.integration.nvim-notify").delegate(msg, level, opts)
-              end
+        redirect = ''
+          function(msg, level, opts)
+            if opts and opts.on_open then
+              return require("fidget.integration.nvim-notify").delegate(msg, level, opts)
             end
-          '';
-        };
-
+          end
+        '';
         configs = {
           default = {
             __lua = ''
@@ -108,7 +90,6 @@
             '';
           };
         };
-
         window = {
           normalHl = "Comment";
           winblend = 0;
@@ -121,7 +102,6 @@
           align = "bottom";
           relative = "editor";
         };
-
         view = {
           stackUpwards = true;
           iconSeparator = " ";
