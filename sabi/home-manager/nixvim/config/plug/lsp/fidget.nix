@@ -65,15 +65,21 @@
         filter = "info"; # “off”, “error”, “warn”, “info”, “debug”, “trace”
         historySize = 128; # Number of removed messages to retain in history
         overrideVimNotify = true;
-        redirect = ''
-          function(msg, level, opts)
-            if opts and opts.on_open then
-              return require("fidget.integration.nvim-notify").delegate(msg, level, opts)
+        redirect = {
+          __lua = ''
+            return function(msg, level, opts)
+              if opts and opts.on_open then
+                return require("fidget.integration.nvim-notify").delegate(msg, level, opts)
+              end
             end
-          end
-        '';
+          '';
+        };
         configs = {
-          default = "require('fidget.notification').default_config";
+          default = {
+            __lua = ''
+              return require('fidget.notification').default_config
+            '';
+          };
         };
 
         window = {
