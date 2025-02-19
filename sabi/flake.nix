@@ -30,6 +30,7 @@
 
     lib = pkgs.lib;
     configuration = {pkgs, ...}: {
+      ids.gids.nixbld = 350;
       services = {
         yabai = {
           enable = true;
