@@ -5,22 +5,22 @@
       src = pkgs.fetchFromGitHub {
         owner = "shellRaining";
         repo = "hlchunk.nvim";
+        rev = "refs/tags/v1.3.0";
+        hash = "sha256-UGxrfFuLJETL/KJNY9k4zehxb6RrXC6UZxnG+7c9JXw=";
       };
-
-      # Add runtime paths explicitly
-      buildPhase = ''
-        mkdir -p $out/lua
-        cp -r lua/* $out/lua/
-      '';
     })
   ];
 
   extraConfigLua = ''
+    vim.opt.list = true
+    vim.opt.listchars:append "space:⋅"
+    vim.opt.listchars:append "eol:↴"
+
     require('hlchunk').setup({
       chunk = {
         enable = true,
         support_filetypes = {
-          '.*',
+          '*',
         },
         chars = {
           horizontal_line = "─",
