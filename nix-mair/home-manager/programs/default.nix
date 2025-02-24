@@ -104,10 +104,11 @@ in {
   ];
 
   # basic configuration of git, please change to your own
+  #  `programs.vscode.profiles.default.extensions'
   programs = {
     vscode = {
       enable = true;
-      extensions = with pkgs.vscode-extensions; [
+      profiles.default.extensions = with pkgs.vscode-extensions; [
         # Looks
         jdinhlife.gruvbox
         pkief.material-icon-theme
