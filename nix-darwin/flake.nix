@@ -30,7 +30,6 @@
     lib = pkgs.lib;
     configuration = {...}: {
       services = {
-        nix-daemon.enable = true;
         yabai = {
           enable = true;
           package = pkgs.yabai;
