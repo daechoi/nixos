@@ -4,7 +4,7 @@
   inputs,
   ...
 }: let
-  neovimconfig = import ../../../nix-mair/home-manager/nixvim/config;
+  neovimconfig = import ../nixvim/config;
   nvim = inputs.nixvim.legacyPackages.x86_64-darwin.makeNixvimWithModule {
     inherit pkgs;
     module = neovimconfig;
@@ -90,7 +90,7 @@ in {
   programs = {
     vscode = {
       enable = true;
-      extensions = with pkgs.vscode-extensions; [
+      profiles.default.extensions = with pkgs.vscode-extensions; [
         # Looks
         jdinhlife.gruvbox
         pkief.material-icon-theme
