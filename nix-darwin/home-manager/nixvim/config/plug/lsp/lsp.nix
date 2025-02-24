@@ -1,7 +1,21 @@
 {
   plugins = {
-    dap.enable = true;
+    dap = {
+      enable = true;
+      adapters = {
+        servers = {
+          codelldb = {
+            port = "\${port}";
+            executable = {
+              command = "~/.local/share/nvim/mason/bin/codelldb";
+              args = ["dap" "-l" "127.0.0.1:\$(port)"];
+            };
+          };
+        };
+      };
+    };
     lsp-format = {enable = true;};
+    rustaceanvim.enable = true;
     lsp = {
       enable = true;
       servers = {
@@ -101,7 +115,6 @@
       };
     };
     web-devicons.enable = true;
-    rustaceanvim.enable = true;
   };
   extraConfigLua = ''
     local _border = "rounded"

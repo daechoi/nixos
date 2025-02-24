@@ -4,7 +4,7 @@
   inputs,
   ...
 }: let
-  neovimconfig = import ../nixvim/config;
+  neovimconfig = import ../../../nix-mair/home-manager/nixvim/config;
   nvim = inputs.nixvim.legacyPackages.x86_64-darwin.makeNixvimWithModule {
     inherit pkgs;
     module = neovimconfig;
@@ -24,6 +24,9 @@ in {
     #    kustomize
     #    envsubst
     #    doctl
+
+    podman
+    podman-compose
 
     htop
     #    neofetch
@@ -108,7 +111,7 @@ in {
         haskell.haskell
 
         # Copilot
-        github.copilot
+        #        github.copilot
 
         # Misc
         mkhl.direnv
