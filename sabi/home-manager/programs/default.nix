@@ -111,7 +111,7 @@ in {
       enable = true;
       userName = "Dae Choi";
       userEmail = "daechoi@outlook.com";
-      package = pkgs.gitAndTools.gitFull;
+      package = pkgs.git;
       extraConfig = {
         core.editor = "vim";
         credential.helper = "cache";
