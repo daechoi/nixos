@@ -169,6 +169,8 @@
 
       system.configurationRevision = self.rev or self.dirtyRev or null;
       system.stateVersion = 4;
+      ids.gids.nixbld = 350;
+
       nixpkgs = {
         hostPlatform = system;
         config.allowUnfree = true;
