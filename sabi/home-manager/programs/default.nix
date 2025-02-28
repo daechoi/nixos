@@ -25,6 +25,7 @@ in {
     #    kustomize
     #    envsubst
     #    doctl
+    age
 
     htop
     #    neofetch
