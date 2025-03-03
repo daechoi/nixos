@@ -73,6 +73,7 @@ in {
     pandoc
     tectonic
 
+    terraform
     # nix related
     #
     # it provides the command `nom` works just like `nix`
