@@ -20,19 +20,19 @@ in {
     languageRegister.nu = "nu";
     languageRegister.liq = "liquidsoap";
     nixvimInjections = true;
+
+    # First approach: Just disable the problematic grammar
     grammarPackages =
       [
         nu-grammar
       ]
-      ++ pkgs.vimPlugins.nvim-treesitter.allGrammars;
+      ++ builtins.filter
+      (
+        grammar:
+          !(pkgs.lib.hasInfix "ocamllex" (builtins.toString grammar))
+      )
+      (builtins.attrValues pkgs.vimPlugins.nvim-treesitter.grammarPlugins);
   };
-
-  /*
-    extraFiles = {
-    "/queries/nu/highlights.scm" = builtins.readFile "${nu-grammar}/queries/nu/highlights.scm";
-    "/queries/nu/injections.scm" = builtins.readFile "${nu-grammar}/queries/nu/injections.scm";
-  };
-  */
   extraConfigLua = ''
     local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 
