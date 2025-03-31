@@ -12,6 +12,7 @@
 in {
   filetype.extension.liq = "liquidsoap";
   filetype.extension.nu = "nu";
+
   plugins.treesitter = {
     enable = true;
     settings.indent.enable = true;
@@ -23,18 +24,18 @@ in {
       [
         nu-grammar
       ]
-      # Use this instead of allGrammars to exclude the problematic ocamllex grammar
-      ++ (
-        pkgs.lib.filter
-        (g: pkgs.lib.getName g != "tree-sitter-ocamllex")
-        (builtins.attrValues pkgs.vimPlugins.nvim-treesitter.grammarPlugins)
-      );
+      ++ pkgs.vimPlugins.nvim-treesitter.allGrammars;
   };
+
   /*
-  Rest of your configuration remains the same
+    extraFiles = {
+    "/queries/nu/highlights.scm" = builtins.readFile "${nu-grammar}/queries/nu/highlights.scm";
+    "/queries/nu/injections.scm" = builtins.readFile "${nu-grammar}/queries/nu/injections.scm";
+  };
   */
   extraConfigLua = ''
     local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+
     parser_config.liquidsoap = {
       filetype = "liquidsoap",
     }

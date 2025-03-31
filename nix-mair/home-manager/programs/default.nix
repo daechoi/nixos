@@ -16,6 +16,7 @@ in {
     nvim
 
     # dev
+    gcc
     #    gnumake
     #kube
     #    kind
@@ -24,6 +25,7 @@ in {
     #    kustomize
     #    envsubst
     #    doctl
+    age
 
     htop
     #    neofetch
@@ -71,6 +73,7 @@ in {
     pandoc
     tectonic
 
+    terraform
     # nix related
     #
     # it provides the command `nom` works just like `nix`
@@ -91,10 +94,11 @@ in {
     podman-compose
     podman-tui
     podman
-    qemu
     nomad
+
     natscli
 
+    qemu
     # shell
     autojump
     #nomad-driver-podman
@@ -104,7 +108,6 @@ in {
   ];
 
   # basic configuration of git, please change to your own
-  #  `programs.vscode.profiles.default.extensions'
   programs = {
     git = {
       enable = true;
@@ -200,7 +203,7 @@ in {
       syntaxHighlighting.enable = true;
       shellAliases = {
         ll = "ls -l";
-        update = "darwin-rebuild switch --flake /Users/dchoi/.nixos/nix-mair";
+        update = "darwin-rebuild switch --flake /Users/dchoi/.nixos/sabi";
         vim = "nvim";
         g = "git";
         k = "kubectl";
@@ -231,7 +234,7 @@ in {
         }
 
         source ~/.p20k.zsh;
-        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-packages/bin;
+        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-global/bin;
         eval "$(direnv hook zsh)";
       '';
       zplug = {
