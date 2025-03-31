@@ -30,6 +30,10 @@
 
     lib = pkgs.lib;
     configuration = {pkgs, ...}: {
+      users.users.dchoi = {
+        name = "dchoi";
+        home = "/Users/dchoi";
+      };
       services = {
         yabai = {
           enable = true;
