@@ -204,6 +204,7 @@ in {
       shellAliases = {
         ll = "ls -l";
         update = "darwin-rebuild switch --flake /Users/dchoi/.nixos/nix-mair";
+        upgrade = "nix flake update";
         vim = "nvim";
         g = "git";
         k = "kubectl";
