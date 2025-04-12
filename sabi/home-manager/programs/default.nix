@@ -26,6 +26,7 @@ in {
     #    envsubst
     #    doctl
     age
+    docker-sync
 
     htop
     #    neofetch
