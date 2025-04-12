@@ -25,7 +25,13 @@
         lua_ls = {enable = true;};
         nil_ls = {enable = true;};
         marksman = {enable = true;};
-        pyright = {enable = true;};
+        pylsp = {
+          enable = true;
+          settings.plugins = {
+            black.enabled = true;
+            ruff.enabled = true;
+          };
+        };
         gopls = {enable = true;};
         terraformls = {enable = true;};
         ts_ls = {
