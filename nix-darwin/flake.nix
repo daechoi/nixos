@@ -24,11 +24,13 @@
     ...
   }: let
     system = "x86_64-darwin";
+
     pkgs = import nixpkgs {
       inherit system;
     };
     lib = pkgs.lib;
     configuration = {...}: {
+      system.primaryUser = "dchoi";
       services = {
         yabai = {
           enable = true;
