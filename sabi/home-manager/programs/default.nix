@@ -223,7 +223,7 @@ in {
         export TERM=xterm-256color-italic
         export CLICOLOR=1
       '';
-      initExtra = ''
+      initContent = ''
         function lll() {
           tree -aC -L 3 -I '.git|node_modules|target' --dirsfirst "$@" | less -FRNX;
         }

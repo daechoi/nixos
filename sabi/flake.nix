@@ -31,6 +31,7 @@
     lib = pkgs.lib;
     configuration = {pkgs, ...}: {
       ids.gids.nixbld = 350;
+      system.primaryUser = "dchoi";
       services = {
         yabai = {
           enable = true;
@@ -165,7 +166,6 @@
       programs = {
         zsh.enable = true;
       };
-
       system.configurationRevision = self.rev or self.dirtyRev or null;
       system.stateVersion = 4;
       nixpkgs = {
