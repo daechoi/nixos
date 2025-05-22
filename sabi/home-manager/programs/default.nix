@@ -3,21 +3,32 @@
   pkgs,
   inputs,
   ...
-}: let
-  neovimconfig = import ../nixvim/config;
-  nvim = inputs.nixvim.legacyPackages.aarch64-darwin.makeNixvimWithModule {
-    inherit pkgs;
-    module = neovimconfig;
-  };
-in {
+}:
+{
   home.packages = with pkgs; [
-    # here is some command line tools I use frequently
-    # feel free to add your own or remove some of them
-    nvim
 
     # dev
     gcc
-    #    gnumake
+    ruff
+    pyright
+
+    # Go development
+    go
+    gopls
+    gofumpt
+    golangci-lint
+
+    # Rust
+    rustc
+    cargo
+    rust-analyzer
+    rustfmt
+
+    # Shell/Bash dev
+    bash-language-server
+    shellcheck
+    shfmt
+
     #kube
     #    kind
     #    kubectl
@@ -86,7 +97,6 @@ in {
     devenv
     # productivity
     hugo # static site generator
-    glow # markdown previewer in terminal
 
     # virtualization
     colima
@@ -113,34 +123,273 @@ in {
     helix = {
       enable = true;
       settings = {
-        theme = "autumn_night_transparent";
-        editor.cursor-shape = {
-          normal = "block";
-          insert = "bar";
-          select = "underline";
+        theme = "catppuccin_mocha";
+        editor = {
+          cursor-shape = {
+            normal = "block";
+            insert = "bar";
+            select = "underline";
+          };
+          lsp = {
+            display-messages = true;
+            auto-signature-help = true;
+            display-inlay-hints = true;
+            display-signature-help-docs = true;
+          };
+          auto-format = true;
+          auto-save = true;
         };
       };
-      languages.language = [
-        {
-          name = "nix";
-          auto-format = true;
-          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
-        }
-      ];
+
+      languages = {
+        language = [
+          {
+            name = "nix";
+            auto-format = true;
+            formatter.command = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+          }
+          {
+            name = "python";
+            auto-format = true;
+            language-servers = [
+              "pyright"
+              "ruff"
+            ];
+            formatter = {
+              command = "${pkgs.ruff}/bin/ruff";
+              args = [
+                "format"
+                "--stdin-filename"
+                "file.py"
+                "-"
+              ];
+            };
+            file-types = [
+              "py"
+              "pyi"
+              "py3"
+              "pyw"
+            ];
+            roots = [
+              "pyproject.toml"
+              "setup.py"
+              "setup.cfg"
+              "requirements.txt"
+              "Pipfile"
+              "pyrightconfig.json"
+            ];
+            indent = {
+              tab-width = 4;
+              unit = "    ";
+            };
+          }
+          {
+            name = "rust";
+            auto-format = true;
+            language-servers = [ "rust-analyzer" ];
+            formatter = {
+              command = "${pkgs.rustfmt}/bin/rustfmt";
+              args = [
+                "--edition"
+                "2021"
+              ];
+            };
+            file-types = [ "rs" ];
+            roots = [
+              "Cargo.toml"
+              "Cargo.lock"
+            ];
+            indent = {
+              tab-width = 4;
+              unit = "    ";
+            };
+          }
+          {
+            name = "go";
+            auto-format = true;
+            language-servers = [ "gopls" ];
+            formatter = {
+              command = "${pkgs.gofumpt}/bin/gofumpt";
+              args = [ ];
+            };
+            file-types = [ "go" ];
+            roots = [
+              "go.mod"
+              "go.sum"
+              "go.work"
+            ];
+            indent = {
+              tab-width = 4;
+              unit = "	"; # Go uses tabs
+            };
+          }
+          {
+            name = "bash";
+            auto-format = true;
+            language-servers = [ "bash-language-server" ];
+            formatter = {
+              command = "${pkgs.shfmt}/bin/shfmt";
+              args = [
+                "-i"
+                "2"
+                "-ci"
+              ]; # 2 spaces, indent switch cases
+            };
+            file-types = [
+              "sh"
+              "bash"
+              "zsh"
+            ];
+            shebangs = [
+              "sh"
+              "bash"
+              "zsh"
+            ];
+            roots = [ ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          {
+            name = "env";
+            # No LSP available for .env files, but we can configure syntax
+            file-types = [ "env" ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          # Alternative: dockerfile support (bonus)
+          {
+            name = "dockerfile";
+            language-servers = [ "docker-langserver" ];
+            file-types = [
+              "dockerfile"
+              "Dockerfile"
+              "Containerfile"
+            ];
+            roots = [
+              "Dockerfile"
+              "Containerfile"
+            ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+        ];
+
+        language-server = {
+          # Python
+          pyright = {
+            command = "${pkgs.pyright}/bin/pyright-langserver";
+            args = [ "--stdio" ];
+            config = {
+              python = {
+                analysis = {
+                  typeCheckingMode = "basic";
+                  autoSearchPaths = true;
+                  useLibraryCodeForTypes = true;
+                  autoImportCompletions = true;
+                  diagnosticMode = "workspace";
+                  stubPath = "";
+                  diagnosticSeverityOverrides = {
+                    reportUnusedImport = "information";
+                    reportUnusedVariable = "information";
+                    reportOptionalMemberAccess = "warning";
+                    reportOptionalSubscript = "warning";
+                    reportPrivateImportUsage = "warning";
+                  };
+                };
+              };
+            };
+          };
+          ruff = {
+            command = "${pkgs.ruff}/bin/ruff";
+            args = [
+              "server"
+              "--preview"
+            ];
+            config = {
+              settings = {
+                args = [ "pyproject.toml" ];
+                logLevel = "info";
+              };
+            };
+          };
+
+          # Rust
+          rust-analyzer = {
+            command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+            config = {
+              checkOnSave = {
+                command = "clippy";
+                extraArgs = [ "--no-deps" ];
+              };
+              cargo = {
+                features = "all";
+              };
+              procMacro = {
+                enable = true;
+              };
+              diagnostics = {
+                enable = true;
+                experimental.enable = true;
+              };
+            };
+          };
+
+          # Go
+          gopls = {
+            command = "${pkgs.gopls}/bin/gopls";
+            config = {
+              gofumpt = true;
+              staticcheck = true;
+              usePlaceholders = true;
+              completeUnimported = true;
+              matcher = "fuzzy";
+              experimentalWorkspaceModule = true;
+              hoverKind = "SynopsisDocumentation";
+              linkTarget = "pkg.go.dev";
+            };
+          };
+
+          # Bash
+          bash-language-server = {
+            command = "${pkgs.bash-language-server}/bin/bash-language-server";
+            args = [ "start" ];
+            config = {
+              bashIde = {
+                globPattern = "**/*@(.sh|.inc|.bash|.command)";
+                shellcheckPath = "${pkgs.shellcheck}/bin/shellcheck";
+              };
+            };
+          };
+
+          # Bonus: Docker (if you want it)
+          docker-langserver = {
+            command = "${pkgs.dockerfile-language-server-nodejs}/bin/docker-langserver";
+            args = [ "--stdio" ];
+          };
+        };
+      };
+
       themes = {
         autumn_night_transparent = {
           "inherits" = "autumn_night";
-          "ui.background" = {};
+          "ui.background" = { };
         };
       };
     };
+
     git = {
       enable = true;
       userName = "Dae Choi";
       userEmail = "daechoi@outlook.com";
       package = pkgs.git;
       extraConfig = {
-        core.editor = "vim";
+        core.editor = "hx";
         credential.helper = "cache";
         init.defaultBranch = "main";
         pull.rebase = true;
@@ -228,8 +477,7 @@ in {
       syntaxHighlighting.enable = true;
       shellAliases = {
         ll = "ls -l";
-        update = "darwin-rebuild switch --flake /Users/dchoi/.nixos/sabi";
-        vim = "nvim";
+        update = "sudo darwin-rebuild switch --flake /Users/dchoi/.nixos/sabi";
         g = "git";
         k = "kubectl";
         ".." = "cd ..";
@@ -270,7 +518,10 @@ in {
           } # Simple plugin installation
           {
             name = "romkatv/powerlevel10k";
-            tags = [as:theme depth:1];
+            tags = [
+              "as:theme"
+              "depth:1"
+            ];
           } # Installations with additional options. For the list of options, please refer to Zplug README.
         ];
       };

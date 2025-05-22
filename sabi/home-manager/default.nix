@@ -2,9 +2,9 @@
   lib,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
-    inputs.nixvim.homeManagerModules.nixvim
     ./programs
   ];
   home = {
@@ -13,5 +13,3 @@
     stateVersion = "24.05";
   };
 }
-#       homeDirectory = lib.mkForce "/Users/dchoi";
-
