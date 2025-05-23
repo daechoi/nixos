@@ -17,12 +17,16 @@
     gopls
     gofumpt
     golangci-lint
+    delve # Go debugger
 
     # Rust
     rustc
     cargo
     rust-analyzer
     rustfmt
+
+    # Python debugging
+    python3Packages.debugpy
 
     # Shell/Bash dev
     bash-language-server
@@ -55,7 +59,7 @@
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
     yq-go # yaml processor https://github.com/mikefarah/yq
-    eza # A modern replacement for ‘ls’
+    eza # A modern replacement for 'ls'
     fzf # A command-line fuzzy finder
     direnv # An environment switcher for the shell
     bunyan-rs # A JSON CLI logger:w
@@ -155,6 +159,15 @@
               "pyright"
               "ruff"
             ];
+            debugger = {
+              name = "debugpy";
+              transport = "stdio";
+              command = "${pkgs.python3Packages.debugpy}/bin/python";
+              args = [
+                "-m"
+                "debugpy.adapter"
+              ];
+            };
             formatter = {
               command = "${pkgs.ruff}/bin/ruff";
               args = [
@@ -187,6 +200,11 @@
             name = "rust";
             auto-format = true;
             language-servers = [ "rust-analyzer" ];
+            debugger = {
+              name = "lldb-vscode";
+              transport = "stdio";
+              command = "${pkgs.lldb}/bin/lldb-vscode";
+            };
             formatter = {
               command = "${pkgs.rustfmt}/bin/rustfmt";
               args = [
@@ -208,6 +226,13 @@
             name = "go";
             auto-format = true;
             language-servers = [ "gopls" ];
+            debugger = {
+              name = "delve";
+              transport = "stdio";
+              command = "${pkgs.delve}/bin/dlv";
+              args = [ "dap" ];
+              port-arg = "--listen=127.0.0.1:{}";
+            };
             formatter = {
               command = "${pkgs.gofumpt}/bin/gofumpt";
               args = [ ];
@@ -373,6 +398,140 @@
             args = [ "--stdio" ];
           };
         };
+
+        # Debug Adapter Protocol (DAP) configuration
+        debugger = {
+          debugpy = {
+            name = "debugpy";
+            transport = "stdio";
+            command = "${pkgs.python3Packages.debugpy}/bin/python";
+            args = [
+              "-m"
+              "debugpy.adapter"
+            ];
+            templates = [
+              {
+                name = "source";
+                request = "launch";
+                completion = [
+                  {
+                    name = "entrypoint";
+                    completion = "filename";
+                    default = ".";
+                  }
+                ];
+                args = {
+                  mode = "debug";
+                  program = "{0}";
+                };
+              }
+            ];
+          };
+
+          lldb-vscode = {
+            name = "lldb-vscode";
+            transport = "stdio";
+            command = "${pkgs.lldb}/bin/lldb-vscode";
+            templates = [
+              {
+                name = "binary";
+                request = "launch";
+                completion = [
+                  {
+                    name = "binary";
+                    completion = "filename";
+                  }
+                ];
+                args = {
+                  program = "{0}";
+                  console = "internalConsole";
+                  stopOnEntry = false;
+                };
+              }
+              {
+                name = "attach";
+                request = "attach";
+                completion = [
+                  {
+                    name = "pid";
+                    completion = "pid";
+                  }
+                ];
+                args = {
+                  pid = "{0}";
+                };
+              }
+            ];
+          };
+
+          delve = {
+            name = "delve";
+            transport = "stdio";
+            command = "${pkgs.delve}/bin/dlv";
+            args = [ "dap" ];
+            port-arg = "--listen=127.0.0.1:{}";
+            templates = [
+              {
+                name = "source";
+                request = "launch";
+                completion = [
+                  {
+                    name = "entrypoint";
+                    completion = "filename";
+                    default = ".";
+                  }
+                ];
+                args = {
+                  mode = "debug";
+                  program = "{0}";
+                };
+              }
+              {
+                name = "binary";
+                request = "launch";
+                completion = [
+                  {
+                    name = "binary";
+                    completion = "filename";
+                  }
+                ];
+                args = {
+                  mode = "exec";
+                  program = "{0}";
+                };
+              }
+              {
+                name = "test";
+                request = "launch";
+                completion = [
+                  {
+                    name = "tests";
+                    completion = "directory";
+                    default = ".";
+                  }
+                ];
+                args = {
+                  mode = "test";
+                  program = "{0}";
+                };
+              }
+              {
+                name = "attach";
+                request = "attach";
+                completion = [
+                  {
+                    name = "pid";
+                    completion = "pid";
+                  }
+                ];
+                args = {
+                  mode = "local";
+                  processId = "{0}";
+                };
+              }
+            ];
+          };
+        };
       };
 
       themes = {
@@ -459,11 +618,11 @@
         set-option -g status-right-length "80"
         set-window-option -g window-status-separator ""
 
-        set-option -g status-left "#[bg=colour241,fg=colour248] #S #[bg=colour237,fg=colour241,nobold,noitalics,nounderscore]"
-        set-option -g status-right "#[bg=colour237,fg=colour239 nobold, nounderscore, noitalics]#[bg=colour239,fg=colour246] %Y-%m-%d  %H:%M #[bg=colour239,fg=colour248,nobold,noitalics,nounderscore]#[bg=colour248,fg=colour237] #h "
+        set-option -g status-left "#[bg=colour241,fg=colour248] #S #[bg=colour237,fg=colour241,nobold,noitalics,nounderscore]"
+        set-option -g status-right "#[bg=colour237,fg=colour239 nobold, nounderscore, noitalics]#[bg=colour239,fg=colour246] %Y-%m-%d  %H:%M #[bg=colour239,fg=colour248,nobold,noitalics,nounderscore]#[bg=colour248,fg=colour237] #h "
 
-        set-window-option -g window-status-current-format "#[bg=colour214,fg=colour237,nobold,noitalics,nounderscore]#[bg=colour214,fg=colour239] #I #[bg=colour214,fg=colour239,bold] #W #[bg=colour237,fg=colour214,nobold,noitalics,nounderscore]"
-        set-window-option -g window-status-format "#[bg=colour239,fg=colour237,noitalics]#[bg=colour239,fg=colour223] #I #[bg=colour239,fg=colour223] #W #[bg=colour237,fg=colour239,noitalics]"
+        set-window-option -g window-status-current-format "#[bg=colour214,fg=colour237,nobold,noitalics,nounderscore]#[bg=colour214,fg=colour239] #I #[bg=colour214,fg=colour239,bold] #W #[bg=colour237,fg=colour214,nobold,noitalics,nounderscore]"
+        set-window-option -g window-status-format "#[bg=colour239,fg=colour237,noitalics]#[bg=colour239,fg=colour223] #I #[bg=colour239,fg=colour223] #W #[bg=colour237,fg=colour239,noitalics]"
         # set -g status-right "#(/usr/bin/env bash $HOME/.tmux/kube-tmux/kube.tmux 250 red cyan)"
       '';
     };
