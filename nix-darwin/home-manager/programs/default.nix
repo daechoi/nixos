@@ -3,20 +3,36 @@
   pkgs,
   inputs,
   ...
-}: let
-  neovimconfig = import ../nixvim/config;
-  nvim = inputs.nixvim.legacyPackages.x86_64-darwin.makeNixvimWithModule {
-    inherit pkgs;
-    module = neovimconfig;
-  };
-in {
+}:
+{
   home.packages = with pkgs; [
-    # here is some command line tools I use frequently
-    # feel free to add your own or remove some of them
-    nvim
 
     # dev
-    #    gnumake
+    gcc
+    ruff
+    pyright
+
+    # Go development
+    go
+    gopls
+    gofumpt
+    golangci-lint
+    delve # Go debugger
+
+    # Rust
+    rustc
+    cargo
+    rust-analyzer
+    rustfmt
+
+    # Python debugging
+    python3Packages.debugpy
+
+    # Shell/Bash dev
+    bash-language-server
+    shellcheck
+    shfmt
+
     #kube
     #    kind
     #    kubectl
@@ -24,9 +40,8 @@ in {
     #    kustomize
     #    envsubst
     #    doctl
-
-    # podman
-    podman-compose
+    age
+    docker-sync
 
     htop
     #    neofetch
@@ -44,7 +59,7 @@ in {
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
     yq-go # yaml processor https://github.com/mikefarah/yq
-    eza # A modern replacement for ‘ls’
+    eza # A modern replacement for 'ls'
     fzf # A command-line fuzzy finder
     direnv # An environment switcher for the shell
     bunyan-rs # A JSON CLI logger:w
@@ -61,6 +76,7 @@ in {
     ipcalc # it is a calculator for the IPv4/v6 addresses
 
     # misc
+    cowsay
     file
     which
     tree
@@ -70,53 +86,460 @@ in {
     zstd
     gnupg
 
+    pandoc
+    tectonic
+
+    terraform
     # nix related
     #
     # it provides the command `nom` works just like `nix`
     # with more details log output
     nix-output-monitor
 
+    damon
+
     devenv
     # productivity
     hugo # static site generator
-    glow # markdown previewer in terminal
 
-    google-chrome
+    # virtualization
+    colima
+    docker
+    docker-compose
+    podman-compose
+    podman-tui
+    podman
+    nomad
+
+    natscli
+
+    qemu
+    # shell
+    autojump
+    #nomad-driver-podman
     #    font-awesome
     #    noto-fonts-emoji
+    awscli
   ];
 
   # basic configuration of git, please change to your own
   programs = {
-    vscode = {
+    helix = {
       enable = true;
-      profiles.default.extensions = with pkgs.vscode-extensions; [
-        # Looks
-        jdinhlife.gruvbox
-        pkief.material-icon-theme
+      settings = {
+        theme = "catppuccin_mocha";
+        editor = {
+          cursor-shape = {
+            normal = "block";
+            insert = "bar";
+            select = "underline";
+          };
+          lsp = {
+            display-messages = true;
+            auto-signature-help = true;
+            display-inlay-hints = true;
+            display-signature-help-docs = true;
+          };
+          auto-format = true;
+          auto-save = true;
+        };
+      };
 
-        # Languages
-        rust-lang.rust-analyzer
-        tamasfe.even-better-toml
-        serayuzgur.crates
+      languages = {
+        language = [
+          {
+            name = "nix";
+            auto-format = true;
+            formatter.command = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+          }
+          {
+            name = "python";
+            auto-format = true;
+            language-servers = [
+              "pyright"
+              "ruff"
+            ];
+            debugger = {
+              name = "debugpy";
+              transport = "stdio";
+              command = "${pkgs.python3Packages.debugpy}/bin/python";
+              args = [
+                "-m"
+                "debugpy.adapter"
+              ];
+            };
+            formatter = {
+              command = "${pkgs.ruff}/bin/ruff";
+              args = [
+                "format"
+                "--stdin-filename"
+                "file.py"
+                "-"
+              ];
+            };
+            file-types = [
+              "py"
+              "pyi"
+              "py3"
+              "pyw"
+            ];
+            roots = [
+              "pyproject.toml"
+              "setup.py"
+              "setup.cfg"
+              "requirements.txt"
+              "Pipfile"
+              "pyrightconfig.json"
+            ];
+            indent = {
+              tab-width = 4;
+              unit = "    ";
+            };
+          }
+          {
+            name = "rust";
+            auto-format = true;
+            language-servers = [ "rust-analyzer" ];
+            debugger = {
+              name = "lldb-vscode";
+              transport = "stdio";
+              command = "${pkgs.lldb}/bin/lldb-vscode";
+            };
+            formatter = {
+              command = "${pkgs.rustfmt}/bin/rustfmt";
+              args = [
+                "--edition"
+                "2021"
+              ];
+            };
+            file-types = [ "rs" ];
+            roots = [
+              "Cargo.toml"
+              "Cargo.lock"
+            ];
+            indent = {
+              tab-width = 4;
+              unit = "    ";
+            };
+          }
+          {
+            name = "go";
+            auto-format = true;
+            language-servers = [ "gopls" ];
+            debugger = {
+              name = "delve";
+              transport = "stdio";
+              command = "${pkgs.delve}/bin/dlv";
+              args = [ "dap" ];
+              port-arg = "--listen=127.0.0.1:{}";
+            };
+            formatter = {
+              command = "${pkgs.gofumpt}/bin/gofumpt";
+              args = [ ];
+            };
+            file-types = [ "go" ];
+            roots = [
+              "go.mod"
+              "go.sum"
+              "go.work"
+            ];
+            indent = {
+              tab-width = 4;
+              unit = "	"; # Go uses tabs
+            };
+          }
+          {
+            name = "bash";
+            auto-format = true;
+            language-servers = [ "bash-language-server" ];
+            formatter = {
+              command = "${pkgs.shfmt}/bin/shfmt";
+              args = [
+                "-i"
+                "2"
+                "-ci"
+              ]; # 2 spaces, indent switch cases
+            };
+            file-types = [
+              "sh"
+              "bash"
+              "zsh"
+            ];
+            shebangs = [
+              "sh"
+              "bash"
+              "zsh"
+            ];
+            roots = [ ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          {
+            name = "env";
+            # No LSP available for .env files, but we can configure syntax
+            file-types = [ "env" ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          # Alternative: dockerfile support (bonus)
+          {
+            name = "dockerfile";
+            language-servers = [ "docker-langserver" ];
+            file-types = [
+              "dockerfile"
+              "Dockerfile"
+              "Containerfile"
+            ];
+            roots = [
+              "Dockerfile"
+              "Containerfile"
+            ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+        ];
 
-        bbenoist.nix
-        brettm12345.nixfmt-vscode
+        language-server = {
+          # Python
+          pyright = {
+            command = "${pkgs.pyright}/bin/pyright-langserver";
+            args = [ "--stdio" ];
+            config = {
+              python = {
+                analysis = {
+                  typeCheckingMode = "basic";
+                  autoSearchPaths = true;
+                  useLibraryCodeForTypes = true;
+                  autoImportCompletions = true;
+                  diagnosticMode = "workspace";
+                  stubPath = "";
+                  diagnosticSeverityOverrides = {
+                    reportUnusedImport = "information";
+                    reportUnusedVariable = "information";
+                    reportOptionalMemberAccess = "warning";
+                    reportOptionalSubscript = "warning";
+                    reportPrivateImportUsage = "warning";
+                  };
+                };
+              };
+            };
+          };
+          ruff = {
+            command = "${pkgs.ruff}/bin/ruff";
+            args = [
+              "server"
+              "--preview"
+            ];
+            config = {
+              settings = {
+                args = [ "pyproject.toml" ];
+                logLevel = "info";
+              };
+            };
+          };
 
-        thenuprojectcontributors.vscode-nushell-lang
+          # Rust
+          rust-analyzer = {
+            command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+            config = {
+              checkOnSave = {
+                command = "clippy";
+                extraArgs = [ "--no-deps" ];
+              };
+              cargo = {
+                features = "all";
+              };
+              procMacro = {
+                enable = true;
+              };
+              diagnostics = {
+                enable = true;
+                experimental.enable = true;
+              };
+            };
+          };
 
-        yzhang.markdown-all-in-one
-        marp-team.marp-vscode
+          # Go
+          gopls = {
+            command = "${pkgs.gopls}/bin/gopls";
+            config = {
+              gofumpt = true;
+              staticcheck = true;
+              usePlaceholders = true;
+              completeUnimported = true;
+              matcher = "fuzzy";
+              experimentalWorkspaceModule = true;
+              hoverKind = "SynopsisDocumentation";
+              linkTarget = "pkg.go.dev";
+            };
+          };
 
-        haskell.haskell
+          # Bash
+          bash-language-server = {
+            command = "${pkgs.bash-language-server}/bin/bash-language-server";
+            args = [ "start" ];
+            config = {
+              bashIde = {
+                globPattern = "**/*@(.sh|.inc|.bash|.command)";
+                shellcheckPath = "${pkgs.shellcheck}/bin/shellcheck";
+              };
+            };
+          };
 
-        # Copilot
-        #        github.copilot
+          # Bonus: Docker (if you want it)
+          docker-langserver = {
+            command = "${pkgs.dockerfile-language-server-nodejs}/bin/docker-langserver";
+            args = [ "--stdio" ];
+          };
+        };
 
-        # Misc
-        mkhl.direnv
-        ms-vscode.live-server
-      ];
+        # Debug Adapter Protocol (DAP) configuration
+        debugger = {
+          debugpy = {
+            name = "debugpy";
+            transport = "stdio";
+            command = "${pkgs.python3Packages.debugpy}/bin/python";
+            args = [
+              "-m"
+              "debugpy.adapter"
+            ];
+            templates = [
+              {
+                name = "source";
+                request = "launch";
+                completion = [
+                  {
+                    name = "entrypoint";
+                    completion = "filename";
+                    default = ".";
+                  }
+                ];
+                args = {
+                  mode = "debug";
+                  program = "{0}";
+                };
+              }
+            ];
+          };
+
+          lldb-vscode = {
+            name = "lldb-vscode";
+            transport = "stdio";
+            command = "${pkgs.lldb}/bin/lldb-vscode";
+            templates = [
+              {
+                name = "binary";
+                request = "launch";
+                completion = [
+                  {
+                    name = "binary";
+                    completion = "filename";
+                  }
+                ];
+                args = {
+                  program = "{0}";
+                  console = "internalConsole";
+                  stopOnEntry = false;
+                };
+              }
+              {
+                name = "attach";
+                request = "attach";
+                completion = [
+                  {
+                    name = "pid";
+                    completion = "pid";
+                  }
+                ];
+                args = {
+                  pid = "{0}";
+                };
+              }
+            ];
+          };
+
+          delve = {
+            name = "delve";
+            transport = "stdio";
+            command = "${pkgs.delve}/bin/dlv";
+            args = [ "dap" ];
+            port-arg = "--listen=127.0.0.1:{}";
+            templates = [
+              {
+                name = "source";
+                request = "launch";
+                completion = [
+                  {
+                    name = "entrypoint";
+                    completion = "filename";
+                    default = ".";
+                  }
+                ];
+                args = {
+                  mode = "debug";
+                  program = "{0}";
+                };
+              }
+              {
+                name = "binary";
+                request = "launch";
+                completion = [
+                  {
+                    name = "binary";
+                    completion = "filename";
+                  }
+                ];
+                args = {
+                  mode = "exec";
+                  program = "{0}";
+                };
+              }
+              {
+                name = "test";
+                request = "launch";
+                completion = [
+                  {
+                    name = "tests";
+                    completion = "directory";
+                    default = ".";
+                  }
+                ];
+                args = {
+                  mode = "test";
+                  program = "{0}";
+                };
+              }
+              {
+                name = "attach";
+                request = "attach";
+                completion = [
+                  {
+                    name = "pid";
+                    completion = "pid";
+                  }
+                ];
+                args = {
+                  mode = "local";
+                  processId = "{0}";
+                };
+              }
+            ];
+          };
+        };
+      };
+
+      themes = {
+        autumn_night_transparent = {
+          "inherits" = "autumn_night";
+          "ui.background" = { };
+        };
+      };
     };
 
     git = {
@@ -125,7 +548,7 @@ in {
       userEmail = "daechoi@outlook.com";
       package = pkgs.git;
       extraConfig = {
-        core.editor = "vim";
+        core.editor = "hx";
         credential.helper = "cache";
         init.defaultBranch = "main";
         pull.rebase = true;
@@ -195,11 +618,11 @@ in {
         set-option -g status-right-length "80"
         set-window-option -g window-status-separator ""
 
-        set-option -g status-left "#[bg=colour241,fg=colour248] #S #[bg=colour237,fg=colour241,nobold,noitalics,nounderscore]"
-        set-option -g status-right "#[bg=colour237,fg=colour239 nobold, nounderscore, noitalics]#[bg=colour239,fg=colour246] %Y-%m-%d  %H:%M #[bg=colour239,fg=colour248,nobold,noitalics,nounderscore]#[bg=colour248,fg=colour237] #h "
+        set-option -g status-left "#[bg=colour241,fg=colour248] #S #[bg=colour237,fg=colour241,nobold,noitalics,nounderscore]"
+        set-option -g status-right "#[bg=colour237,fg=colour239 nobold, nounderscore, noitalics]#[bg=colour239,fg=colour246] %Y-%m-%d  %H:%M #[bg=colour239,fg=colour248,nobold,noitalics,nounderscore]#[bg=colour248,fg=colour237] #h "
 
-        set-window-option -g window-status-current-format "#[bg=colour214,fg=colour237,nobold,noitalics,nounderscore]#[bg=colour214,fg=colour239] #I #[bg=colour214,fg=colour239,bold] #W #[bg=colour237,fg=colour214,nobold,noitalics,nounderscore]"
-        set-window-option -g window-status-format "#[bg=colour239,fg=colour237,noitalics]#[bg=colour239,fg=colour223] #I #[bg=colour239,fg=colour223] #W #[bg=colour237,fg=colour239,noitalics]"
+        set-window-option -g window-status-current-format "#[bg=colour214,fg=colour237,nobold,noitalics,nounderscore]#[bg=colour214,fg=colour239] #I #[bg=colour214,fg=colour239,bold] #W #[bg=colour237,fg=colour214,nobold,noitalics,nounderscore]"
+        set-window-option -g window-status-format "#[bg=colour239,fg=colour237,noitalics]#[bg=colour239,fg=colour223] #I #[bg=colour239,fg=colour223] #W #[bg=colour237,fg=colour239,noitalics]"
         # set -g status-right "#(/usr/bin/env bash $HOME/.tmux/kube-tmux/kube.tmux 250 red cyan)"
       '';
     };
@@ -213,8 +636,7 @@ in {
       syntaxHighlighting.enable = true;
       shellAliases = {
         ll = "ls -l";
-        update = "darwin-rebuild switch --flake /Users/dchoi/.nixos/nix-darwin";
-        vim = "nvim";
+        update = "sudo darwin-rebuild switch --flake /Users/dchoi/.nixos/sabi";
         g = "git";
         k = "kubectl";
         ".." = "cd ..";
@@ -243,9 +665,8 @@ in {
           tree -aC -L 5 -I '.git|node_modules|target' --dirsfirst "$@" | less -FRNX;
         }
 
-        # source ~/.p20k.zsh;
-        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin;
-        export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+        source ~/.p20k.zsh;
+        export PATH=$PATH:/Users/dchoi/.cargo/bin:/Users/dchoi/.scripts/bin:/Users/dchoi/.local/bin:/Users/dchoi/.npm-global/bin;
         eval "$(direnv hook zsh)";
       '';
       zplug = {
@@ -256,7 +677,10 @@ in {
           } # Simple plugin installation
           {
             name = "romkatv/powerlevel10k";
-            tags = [as:theme depth:1];
+            tags = [
+              "as:theme"
+              "depth:1"
+            ];
           } # Installations with additional options. For the list of options, please refer to Zplug README.
         ];
       };
