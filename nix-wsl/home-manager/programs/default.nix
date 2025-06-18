@@ -15,6 +15,7 @@ in {
     # feel free to add your own or remove some of them
     nvim
 
+    helix
     # dev
     just
     go
