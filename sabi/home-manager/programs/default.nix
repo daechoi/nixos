@@ -24,6 +24,7 @@
     cargo
     rust-analyzer
     rustfmt
+    lldb # LLDB debugger for Rust
 
     # Python debugging
     python3Packages.debugpy
@@ -32,6 +33,10 @@
     bash-language-server
     shellcheck
     shfmt
+
+    # JSON/YAML formatters
+    nodePackages.prettier # For JSON and YAML formatting
+    # Alternative: you already have jq for JSON
 
     #kube
     #    kind
@@ -167,6 +172,23 @@
                 "-m"
                 "debugpy.adapter"
               ];
+              templates = [
+                {
+                  name = "source";
+                  request = "launch";
+                  completion = [
+                    {
+                      name = "entrypoint";
+                      completion = "filename";
+                      default = ".";
+                    }
+                  ];
+                  args = {
+                    mode = "debug";
+                    program = "{0}";
+                  };
+                }
+              ];
             };
             formatter = {
               command = "${pkgs.ruff}/bin/ruff";
@@ -201,9 +223,39 @@
             auto-format = true;
             language-servers = [ "rust-analyzer" ];
             debugger = {
-              name = "lldb-vscode";
+              name = "lldb-dap";
               transport = "stdio";
-              command = "${pkgs.lldb}/bin/lldb-vscode";
+              command = "${pkgs.lldb}/bin/lldb-dap";
+              templates = [
+                {
+                  name = "binary";
+                  request = "launch";
+                  completion = [
+                    {
+                      name = "binary";
+                      completion = "filename";
+                    }
+                  ];
+                  args = {
+                    program = "{0}";
+                    console = "internalConsole";
+                    stopOnEntry = false;
+                  };
+                }
+                {
+                  name = "attach";
+                  request = "attach";
+                  completion = [
+                    {
+                      name = "pid";
+                      completion = "pid";
+                    }
+                  ];
+                  args = {
+                    pid = "{0}";
+                  };
+                }
+              ];
             };
             formatter = {
               command = "${pkgs.rustfmt}/bin/rustfmt";
@@ -232,6 +284,66 @@
               command = "${pkgs.delve}/bin/dlv";
               args = [ "dap" ];
               port-arg = "--listen=127.0.0.1:{}";
+              templates = [
+                {
+                  name = "source";
+                  request = "launch";
+                  completion = [
+                    {
+                      name = "entrypoint";
+                      completion = "filename";
+                      default = ".";
+                    }
+                  ];
+                  args = {
+                    mode = "debug";
+                    program = "{0}";
+                  };
+                }
+                {
+                  name = "binary";
+                  request = "launch";
+                  completion = [
+                    {
+                      name = "binary";
+                      completion = "filename";
+                    }
+                  ];
+                  args = {
+                    mode = "exec";
+                    program = "{0}";
+                  };
+                }
+                {
+                  name = "test";
+                  request = "launch";
+                  completion = [
+                    {
+                      name = "tests";
+                      completion = "directory";
+                      default = ".";
+                    }
+                  ];
+                  args = {
+                    mode = "test";
+                    program = "{0}";
+                  };
+                }
+                {
+                  name = "attach";
+                  request = "attach";
+                  completion = [
+                    {
+                      name = "pid";
+                      completion = "pid";
+                    }
+                  ];
+                  args = {
+                    mode = "local";
+                    processId = "{0}";
+                  };
+                }
+              ];
             };
             formatter = {
               command = "${pkgs.gofumpt}/bin/gofumpt";
@@ -271,6 +383,58 @@
               "zsh"
             ];
             roots = [ ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          {
+            name = "json";
+            auto-format = true;
+            formatter = {
+              command = "${pkgs.jq}/bin/jq";
+              args = [ "." ];
+            };
+            # Alternative prettier configuration (commented out):
+            # formatter = {
+            #   command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            #   args = [ "--parser" "json" ];
+            # };
+            file-types = [
+              "json"
+              "jsonc"
+            ];
+            roots = [ "package.json" ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          {
+            name = "yaml";
+            auto-format = true;
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [
+                "--parser"
+                "yaml"
+              ];
+            };
+            # Alternative using yq (commented out):
+            # formatter = {
+            #   command = "${pkgs.yq-go}/bin/yq";
+            #   args = [ "eval" "." "-" ];
+            # };
+            file-types = [
+              "yaml"
+              "yml"
+            ];
+            roots = [
+              ".github/workflows"
+              "docker-compose.yaml"
+              "docker-compose.yml"
+              ".gitlab-ci.yml"
+            ];
             indent = {
               tab-width = 2;
               unit = "  ";
@@ -396,140 +560,6 @@
           docker-langserver = {
             command = "${pkgs.dockerfile-language-server-nodejs}/bin/docker-langserver";
             args = [ "--stdio" ];
-          };
-        };
-
-        # Debug Adapter Protocol (DAP) configuration
-        debugger = {
-          debugpy = {
-            name = "debugpy";
-            transport = "stdio";
-            command = "${pkgs.python3Packages.debugpy}/bin/python";
-            args = [
-              "-m"
-              "debugpy.adapter"
-            ];
-            templates = [
-              {
-                name = "source";
-                request = "launch";
-                completion = [
-                  {
-                    name = "entrypoint";
-                    completion = "filename";
-                    default = ".";
-                  }
-                ];
-                args = {
-                  mode = "debug";
-                  program = "{0}";
-                };
-              }
-            ];
-          };
-
-          lldb-vscode = {
-            name = "lldb-vscode";
-            transport = "stdio";
-            command = "${pkgs.lldb}/bin/lldb-vscode";
-            templates = [
-              {
-                name = "binary";
-                request = "launch";
-                completion = [
-                  {
-                    name = "binary";
-                    completion = "filename";
-                  }
-                ];
-                args = {
-                  program = "{0}";
-                  console = "internalConsole";
-                  stopOnEntry = false;
-                };
-              }
-              {
-                name = "attach";
-                request = "attach";
-                completion = [
-                  {
-                    name = "pid";
-                    completion = "pid";
-                  }
-                ];
-                args = {
-                  pid = "{0}";
-                };
-              }
-            ];
-          };
-
-          delve = {
-            name = "delve";
-            transport = "stdio";
-            command = "${pkgs.delve}/bin/dlv";
-            args = [ "dap" ];
-            port-arg = "--listen=127.0.0.1:{}";
-            templates = [
-              {
-                name = "source";
-                request = "launch";
-                completion = [
-                  {
-                    name = "entrypoint";
-                    completion = "filename";
-                    default = ".";
-                  }
-                ];
-                args = {
-                  mode = "debug";
-                  program = "{0}";
-                };
-              }
-              {
-                name = "binary";
-                request = "launch";
-                completion = [
-                  {
-                    name = "binary";
-                    completion = "filename";
-                  }
-                ];
-                args = {
-                  mode = "exec";
-                  program = "{0}";
-                };
-              }
-              {
-                name = "test";
-                request = "launch";
-                completion = [
-                  {
-                    name = "tests";
-                    completion = "directory";
-                    default = ".";
-                  }
-                ];
-                args = {
-                  mode = "test";
-                  program = "{0}";
-                };
-              }
-              {
-                name = "attach";
-                request = "attach";
-                completion = [
-                  {
-                    name = "pid";
-                    completion = "pid";
-                  }
-                ];
-                args = {
-                  mode = "local";
-                  processId = "{0}";
-                };
-              }
-            ];
           };
         };
       };
