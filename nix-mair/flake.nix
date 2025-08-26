@@ -34,6 +34,7 @@
         name = "dchoi";
         home = "/Users/dchoi";
       };
+      system.primaryUser = "dchoi";
       services = {
         yabai = {
           enable = true;
