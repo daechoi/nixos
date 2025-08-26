@@ -90,7 +90,6 @@
     gnupg
 
     pandoc
-    tectonic
 
     terraform
     # nix related
