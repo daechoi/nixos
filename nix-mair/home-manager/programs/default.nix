@@ -3,10 +3,8 @@
   pkgs,
   inputs,
   ...
-}:
-{
+}: {
   home.packages = with pkgs; [
-
     # dev
     gcc
     ruff
@@ -221,7 +219,7 @@
           {
             name = "rust";
             auto-format = true;
-            language-servers = [ "rust-analyzer" ];
+            language-servers = ["rust-analyzer"];
             debugger = {
               name = "lldb-dap";
               transport = "stdio";
@@ -264,7 +262,7 @@
                 "2021"
               ];
             };
-            file-types = [ "rs" ];
+            file-types = ["rs"];
             roots = [
               "Cargo.toml"
               "Cargo.lock"
@@ -277,12 +275,12 @@
           {
             name = "go";
             auto-format = true;
-            language-servers = [ "gopls" ];
+            language-servers = ["gopls"];
             debugger = {
               name = "delve";
               transport = "stdio";
               command = "${pkgs.delve}/bin/dlv";
-              args = [ "dap" ];
+              args = ["dap"];
               port-arg = "--listen=127.0.0.1:{}";
               templates = [
                 {
@@ -347,9 +345,9 @@
             };
             formatter = {
               command = "${pkgs.gofumpt}/bin/gofumpt";
-              args = [ ];
+              args = [];
             };
-            file-types = [ "go" ];
+            file-types = ["go"];
             roots = [
               "go.mod"
               "go.sum"
@@ -363,7 +361,7 @@
           {
             name = "bash";
             auto-format = true;
-            language-servers = [ "bash-language-server" ];
+            language-servers = ["bash-language-server"];
             formatter = {
               command = "${pkgs.shfmt}/bin/shfmt";
               args = [
@@ -382,7 +380,7 @@
               "bash"
               "zsh"
             ];
-            roots = [ ];
+            roots = [];
             indent = {
               tab-width = 2;
               unit = "  ";
@@ -393,7 +391,7 @@
             auto-format = true;
             formatter = {
               command = "${pkgs.jq}/bin/jq";
-              args = [ "." ];
+              args = ["."];
             };
             # Alternative prettier configuration (commented out):
             # formatter = {
@@ -404,7 +402,7 @@
               "json"
               "jsonc"
             ];
-            roots = [ "package.json" ];
+            roots = ["package.json"];
             indent = {
               tab-width = 2;
               unit = "  ";
@@ -443,7 +441,7 @@
           {
             name = "env";
             # No LSP available for .env files, but we can configure syntax
-            file-types = [ "env" ];
+            file-types = ["env"];
             indent = {
               tab-width = 2;
               unit = "  ";
@@ -452,7 +450,7 @@
           # Alternative: dockerfile support (bonus)
           {
             name = "dockerfile";
-            language-servers = [ "docker-langserver" ];
+            language-servers = ["docker-langserver"];
             file-types = [
               "dockerfile"
               "Dockerfile"
@@ -473,7 +471,7 @@
           # Python
           pyright = {
             command = "${pkgs.pyright}/bin/pyright-langserver";
-            args = [ "--stdio" ];
+            args = ["--stdio"];
             config = {
               python = {
                 analysis = {
@@ -502,7 +500,7 @@
             ];
             config = {
               settings = {
-                args = [ "pyproject.toml" ];
+                args = ["pyproject.toml"];
                 logLevel = "info";
               };
             };
@@ -514,7 +512,7 @@
             config = {
               checkOnSave = {
                 command = "clippy";
-                extraArgs = [ "--no-deps" ];
+                extraArgs = ["--no-deps"];
               };
               cargo = {
                 features = "all";
@@ -547,7 +545,7 @@
           # Bash
           bash-language-server = {
             command = "${pkgs.bash-language-server}/bin/bash-language-server";
-            args = [ "start" ];
+            args = ["start"];
             config = {
               bashIde = {
                 globPattern = "**/*@(.sh|.inc|.bash|.command)";
@@ -559,7 +557,7 @@
           # Bonus: Docker (if you want it)
           docker-langserver = {
             command = "${pkgs.dockerfile-language-server-nodejs}/bin/docker-langserver";
-            args = [ "--stdio" ];
+            args = ["--stdio"];
           };
         };
       };
@@ -567,7 +565,7 @@
       themes = {
         autumn_night_transparent = {
           "inherits" = "autumn_night";
-          "ui.background" = { };
+          "ui.background" = {};
         };
       };
     };
@@ -666,7 +664,7 @@
       syntaxHighlighting.enable = true;
       shellAliases = {
         ll = "ls -l";
-        update = "sudo darwin-rebuild switch --flake /Users/dchoi/.nixos/sabi";
+        update = "sudo darwin-rebuild switch --flake /Users/dchoi/.nixos/nix-mair";
         g = "git";
         k = "kubectl";
         ".." = "cd ..";
