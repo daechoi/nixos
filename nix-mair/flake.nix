@@ -36,6 +36,9 @@
       };
       system.primaryUser = "dchoi";
       services = {
+        # Tailscale VPN for secure remote access
+        tailscale.enable = true;
+
         yabai = {
           enable = true;
           package = pkgs.yabai;
@@ -167,6 +170,12 @@
           '';
         };
       };
+
+      # Power management - keep Mac awake for remote access
+      power.sleep.computer = null; # never sleep when on power
+      power.sleep.display = 15; # display can sleep after 15 min
+      power.sleep.harddisk = null; # never spin down disk
+
       nix.settings.experimental-features = "nix-command flakes";
       programs = {
         zsh.enable = true;

@@ -5,6 +5,9 @@
   ...
 }: {
   home.packages = with pkgs; [
+    # Remote access
+    mosh # Mobile shell - survives connection drops and roaming
+
     # dev
     gcc
     ruff
