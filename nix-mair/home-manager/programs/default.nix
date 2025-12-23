@@ -47,7 +47,7 @@
     #    envsubst
     #    doctl
     age
-    docker-sync
+    # docker-sync # removed from nixpkgs - was broken/unmaintained
 
     htop
     #    neofetch
@@ -574,10 +574,10 @@
 
     git = {
       enable = true;
-      userName = "Dae Choi";
-      userEmail = "daechoi@outlook.com";
       package = pkgs.git;
-      extraConfig = {
+      settings = {
+        user.name = "Dae Choi";
+        user.email = "daechoi@outlook.com";
         core.editor = "hx";
         credential.helper = "cache";
         init.defaultBranch = "main";
