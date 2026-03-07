@@ -6,6 +6,8 @@
 }:
 {
   home.packages = with pkgs; [
+    # Remote access
+    mosh # Mobile shell - survives connection drops and roaming
 
     # dev
     gcc
@@ -22,6 +24,7 @@
     # Rust
     rustc
     cargo
+    clippy
     rust-analyzer
     rustfmt
     lldb # LLDB debugger for Rust
@@ -46,7 +49,7 @@
     #    envsubst
     #    doctl
     age
-    docker-sync
+    # docker-sync # removed from nixpkgs - was broken/unmaintained
 
     htop
     #    neofetch
@@ -92,7 +95,6 @@
     gnupg
 
     pandoc
-    tectonic
 
     terraform
     # nix related
@@ -512,7 +514,8 @@
           rust-analyzer = {
             command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
             config = {
-              checkOnSave = {
+              checkOnSave = true;
+              check = {
                 command = "clippy";
                 extraArgs = [ "--no-deps" ];
               };
@@ -574,10 +577,10 @@
 
     git = {
       enable = true;
-      userName = "Dae Choi";
-      userEmail = "daechoi@outlook.com";
       package = pkgs.git;
-      extraConfig = {
+      settings = {
+        user.name = "Dae Choi";
+        user.email = "daechoi@outlook.com";
         core.editor = "hx";
         credential.helper = "cache";
         init.defaultBranch = "main";
@@ -590,7 +593,7 @@
       sensibleOnTop = false;
       keyMode = "vi";
       prefix = "M-a";
-      terminal = "xterm-256color-italic";
+      terminal = "xterm-256color";
       shell = "${pkgs.zsh}/bin/zsh";
       mouse = true;
       customPaneNavigationAndResize = false;
@@ -681,7 +684,7 @@
       };
 
       envExtra = ''
-        export TERM=xterm-256color-italic
+        export TERM=xterm-256color
         export CLICOLOR=1
       '';
       initContent = ''
