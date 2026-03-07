@@ -578,9 +578,9 @@
     git = {
       enable = true;
       package = pkgs.git;
-      settings = {
-        user.name = "Dae Choi";
-        user.email = "daechoi@outlook.com";
+      userName = "Dae Choi";
+      userEmail = "daechoi@outlook.com";
+      extraConfig = {
         core.editor = "hx";
         credential.helper = "cache";
         init.defaultBranch = "main";
