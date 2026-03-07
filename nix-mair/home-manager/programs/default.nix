@@ -23,6 +23,7 @@
     # Rust
     rustc
     cargo
+    clippy
     rust-analyzer
     rustfmt
     lldb # LLDB debugger for Rust
@@ -512,7 +513,8 @@
           rust-analyzer = {
             command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
             config = {
-              checkOnSave = {
+              checkOnSave = true;
+              check = {
                 command = "clippy";
                 extraArgs = ["--no-deps"];
               };
@@ -590,7 +592,7 @@
       sensibleOnTop = false;
       keyMode = "vi";
       prefix = "M-a";
-      terminal = "xterm-256color-italic";
+      terminal = "xterm-256color";
       shell = "${pkgs.zsh}/bin/zsh";
       mouse = true;
       customPaneNavigationAndResize = false;
@@ -681,7 +683,7 @@
       };
 
       envExtra = ''
-        export TERM=xterm-256color-italic
+        export TERM=xterm-256color
         export CLICOLOR=1
       '';
       initContent = ''
