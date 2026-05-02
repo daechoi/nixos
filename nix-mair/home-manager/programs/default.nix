@@ -3,7 +3,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   home.packages = with pkgs; [
     # Remote access
     mosh # Mobile shell - survives connection drops and roaming
@@ -30,6 +31,12 @@
 
     # Python debugging
     python3Packages.debugpy
+
+    # Web dev (HTML, CSS, JSX/TSX)
+    vscode-langservers-extracted # vscode-html-language-server, vscode-css-language-server
+    emmet-language-server # Emmet abbreviation expansion
+    typescript-language-server
+    nodePackages.typescript
 
     # Shell/Bash dev
     bash-language-server
@@ -104,7 +111,7 @@
 
     damon
 
-    devenv
+    inputs.devenv.packages.${pkgs.system}.devenv
     # productivity
     hugo # static site generator
 
@@ -222,7 +229,7 @@
           {
             name = "rust";
             auto-format = true;
-            language-servers = ["rust-analyzer"];
+            language-servers = [ "rust-analyzer" ];
             debugger = {
               name = "lldb-dap";
               transport = "stdio";
@@ -265,7 +272,7 @@
                 "2021"
               ];
             };
-            file-types = ["rs"];
+            file-types = [ "rs" ];
             roots = [
               "Cargo.toml"
               "Cargo.lock"
@@ -278,12 +285,12 @@
           {
             name = "go";
             auto-format = true;
-            language-servers = ["gopls"];
+            language-servers = [ "gopls" ];
             debugger = {
               name = "delve";
               transport = "stdio";
               command = "${pkgs.delve}/bin/dlv";
-              args = ["dap"];
+              args = [ "dap" ];
               port-arg = "--listen=127.0.0.1:{}";
               templates = [
                 {
@@ -348,9 +355,9 @@
             };
             formatter = {
               command = "${pkgs.gofumpt}/bin/gofumpt";
-              args = [];
+              args = [ ];
             };
-            file-types = ["go"];
+            file-types = [ "go" ];
             roots = [
               "go.mod"
               "go.sum"
@@ -364,7 +371,7 @@
           {
             name = "bash";
             auto-format = true;
-            language-servers = ["bash-language-server"];
+            language-servers = [ "bash-language-server" ];
             formatter = {
               command = "${pkgs.shfmt}/bin/shfmt";
               args = [
@@ -383,7 +390,7 @@
               "bash"
               "zsh"
             ];
-            roots = [];
+            roots = [ ];
             indent = {
               tab-width = 2;
               unit = "  ";
@@ -394,7 +401,7 @@
             auto-format = true;
             formatter = {
               command = "${pkgs.jq}/bin/jq";
-              args = ["."];
+              args = [ "." ];
             };
             # Alternative prettier configuration (commented out):
             # formatter = {
@@ -405,7 +412,7 @@
               "json"
               "jsonc"
             ];
-            roots = ["package.json"];
+            roots = [ "package.json" ];
             indent = {
               tab-width = 2;
               unit = "  ";
@@ -444,7 +451,7 @@
           {
             name = "env";
             # No LSP available for .env files, but we can configure syntax
-            file-types = ["env"];
+            file-types = [ "env" ];
             indent = {
               tab-width = 2;
               unit = "  ";
@@ -453,7 +460,7 @@
           # Alternative: dockerfile support (bonus)
           {
             name = "dockerfile";
-            language-servers = ["docker-langserver"];
+            language-servers = [ "docker-langserver" ];
             file-types = [
               "dockerfile"
               "Dockerfile"
@@ -468,13 +475,113 @@
               unit = "  ";
             };
           }
+          # HTML
+          {
+            name = "html";
+            auto-format = true;
+            language-servers = [
+              "vscode-html-language-server"
+              "emmet-language-server"
+            ];
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "html" ];
+            };
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          # CSS
+          {
+            name = "css";
+            auto-format = true;
+            language-servers = [
+              "vscode-css-language-server"
+              "emmet-language-server"
+            ];
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "css" ];
+            };
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          # TypeScript
+          {
+            name = "typescript";
+            auto-format = true;
+            language-servers = [
+              "typescript-language-server"
+            ];
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "typescript" ];
+            };
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          # JavaScript
+          {
+            name = "javascript";
+            auto-format = true;
+            language-servers = [
+              "typescript-language-server"
+            ];
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "babel" ];
+            };
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          # JSX (React)
+          {
+            name = "jsx";
+            auto-format = true;
+            language-servers = [
+              "typescript-language-server"
+              "emmet-language-server"
+            ];
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "babel" ];
+            };
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+          # TSX (React + TypeScript)
+          {
+            name = "tsx";
+            auto-format = true;
+            language-servers = [
+              "typescript-language-server"
+              "emmet-language-server"
+            ];
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "typescript" ];
+            };
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
         ];
 
         language-server = {
           # Python
           pyright = {
             command = "${pkgs.pyright}/bin/pyright-langserver";
-            args = ["--stdio"];
+            args = [ "--stdio" ];
             config = {
               python = {
                 analysis = {
@@ -503,7 +610,7 @@
             ];
             config = {
               settings = {
-                args = ["pyproject.toml"];
+                args = [ "pyproject.toml" ];
                 logLevel = "info";
               };
             };
@@ -516,7 +623,7 @@
               checkOnSave = true;
               check = {
                 command = "clippy";
-                extraArgs = ["--no-deps"];
+                extraArgs = [ "--no-deps" ];
               };
               cargo = {
                 features = "all";
@@ -549,7 +656,7 @@
           # Bash
           bash-language-server = {
             command = "${pkgs.bash-language-server}/bin/bash-language-server";
-            args = ["start"];
+            args = [ "start" ];
             config = {
               bashIde = {
                 globPattern = "**/*@(.sh|.inc|.bash|.command)";
@@ -558,10 +665,68 @@
             };
           };
 
+          # Web: HTML
+          vscode-html-language-server = {
+            command = "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
+            args = [ "--stdio" ];
+            config = {
+              provideFormatter = true;
+              html = {
+                autoClosingTags = true;
+                autoCreateQuotes = true;
+              };
+            };
+          };
+
+          # Web: CSS
+          vscode-css-language-server = {
+            command = "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
+            args = [ "--stdio" ];
+            config = {
+              provideFormatter = true;
+              css.validate.enable = true;
+            };
+          };
+
+          # Web: TypeScript / JSX / TSX
+          typescript-language-server = {
+            command = "${pkgs.typescript-language-server}/bin/typescript-language-server";
+            args = [ "--stdio" ];
+            config = {
+              hostInfo = "helix";
+              typescript = {
+                inlayHints = {
+                  includeInlayEnumMemberValueHints = true;
+                  includeInlayFunctionLikeReturnTypeHints = true;
+                  includeInlayFunctionParameterTypeHints = true;
+                  includeInlayParameterNameHints = "all";
+                  includeInlayPropertyDeclarationTypeHints = true;
+                  includeInlayVariableTypeHints = true;
+                };
+              };
+              javascript = {
+                inlayHints = {
+                  includeInlayEnumMemberValueHints = true;
+                  includeInlayFunctionLikeReturnTypeHints = true;
+                  includeInlayFunctionParameterTypeHints = true;
+                  includeInlayParameterNameHints = "all";
+                  includeInlayPropertyDeclarationTypeHints = true;
+                  includeInlayVariableTypeHints = true;
+                };
+              };
+            };
+          };
+
+          # Emmet abbreviation expansion
+          emmet-language-server = {
+            command = "${pkgs.emmet-language-server}/bin/emmet-language-server";
+            args = [ "--stdio" ];
+          };
+
           # Bonus: Docker (if you want it)
           docker-langserver = {
             command = "${pkgs.dockerfile-language-server-nodejs}/bin/docker-langserver";
-            args = ["--stdio"];
+            args = [ "--stdio" ];
           };
         };
       };
@@ -569,7 +734,7 @@
       themes = {
         autumn_night_transparent = {
           "inherits" = "autumn_night";
-          "ui.background" = {};
+          "ui.background" = { };
         };
       };
     };
