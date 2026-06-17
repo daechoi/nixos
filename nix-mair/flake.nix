@@ -35,7 +35,73 @@
       lib = pkgs.lib;
       configuration =
         { pkgs, ... }:
+        let
+          # BlackHole virtual audio driver, built from nixpkgs per channel
+          # count (the override changes channel count + bundle id, so the 2ch
+          # and 16ch variants coexist). CoreAudio only loads HAL drivers from
+          # /Library/Audio/Plug-Ins/HAL, so the postActivation script below
+          # copies them out of the read-only Nix store and restarts coreaudiod.
+          blackhole2ch = pkgs.blackhole.override { channel = "2ch"; };
+          # nixpkgs' `channel` arg only renames the bundle/CFBundleIdentifier;
+          # it does NOT change the channel count, and BlackHole derives its
+          # device UID from the channel count (BlackHole<N>ch_UID). So two
+          # stock variants share one UID and collide (only one device loads).
+          # Patch the source default so this one is genuinely 16-channel ->
+          # distinct device "BlackHole 16ch" / UID BlackHole16ch_UID.
+          blackhole16ch = (pkgs.blackhole.override { channel = "16ch"; }).overrideAttrs (old: {
+            postPatch = (old.postPatch or "") + ''
+              sed -E 's/(#define[[:space:]]+kNumber_Of_Channels[[:space:]]+)2/\116/' \
+                BlackHole/BlackHole.c > BlackHole/BlackHole.c.tmp
+              mv BlackHole/BlackHole.c.tmp BlackHole/BlackHole.c
+            '';
+          });
+        in
         {
+          # ---------------------------------------------------------------
+          # AUDIO: capture BOTH sides of a call into stock macOS Dictation
+          # (so a whole conversation can be dictated into any text field/LLM).
+          # Nix-managed: BlackHole 2ch + 16ch (built above) installed into
+          # /Library/Audio/Plug-Ins/HAL by the activation script below.
+          # Still manual (not Nix): LadioCast mixer (free, Mac App Store) and
+          # the one-time Audio MIDI Setup device wiring.
+          #
+          # Why a mixer: stock Dictation reads only input ch 1-2. An Aggregate
+          # keeps mic & system audio on separate channels (Dictation would
+          # hear the mic only); LadioCast MIXES them onto ch 1-2.
+          #
+          # Wiring (Audio MIDI Setup.app + LadioCast):
+          #   - Multi-Output Device = Speakers/Headphones + BlackHole 2ch
+          #       -> system Output (hear the call AND copy it to BH 2ch)
+          #   - LadioCast: Input1 = Microphone, Input2 = BlackHole 2ch,
+          #       both -> Main;  Main output = BlackHole 16ch
+          #   - System Input (Dictation) = BlackHole 16ch  (mic+far-end on 1-2)
+          # Paid one-box alternative: Rogue Amoeba Loopback.
+          # ---------------------------------------------------------------
+          system.activationScripts.postActivation.text = ''
+            mkdir -p /Library/Audio/Plug-Ins/HAL
+            changed=0
+            for drv in \
+              "${blackhole2ch}/Library/Audio/Plug-Ins/HAL/Blackhole2ch.driver" \
+              "${blackhole16ch}/Library/Audio/Plug-Ins/HAL/Blackhole16ch.driver"; do
+              name="$(/usr/bin/basename "$drv")"
+              dst="/Library/Audio/Plug-Ins/HAL/$name"
+              marker="/Library/Audio/Plug-Ins/HAL/.$name.nixpath"
+              if [ ! -e "$marker" ] || [ "$(cat "$marker" 2>/dev/null)" != "$drv" ]; then
+                echo "[blackhole] installing $name" >&2
+                rm -rf "$dst"
+                cp -R "$drv" "$dst"
+                chown -R root:wheel "$dst"
+                chmod -R 755 "$dst"
+                printf '%s' "$drv" > "$marker"
+                changed=1
+              fi
+            done
+            if [ "$changed" = 1 ]; then
+              echo "[blackhole] restarting coreaudiod" >&2
+              /usr/bin/killall coreaudiod 2>/dev/null || true
+            fi
+          '';
+
           users.users.dchoi = {
             name = "dchoi";
             home = "/Users/dchoi";
