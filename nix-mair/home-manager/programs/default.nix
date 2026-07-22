@@ -36,7 +36,7 @@
     vscode-langservers-extracted # vscode-html-language-server, vscode-css-language-server
     emmet-language-server # Emmet abbreviation expansion
     typescript-language-server
-    nodePackages.typescript
+    typescript
 
     # Shell/Bash dev
     bash-language-server
@@ -44,7 +44,7 @@
     shfmt
 
     # JSON/YAML formatters
-    nodePackages.prettier # For JSON and YAML formatting
+    prettier # For JSON and YAML formatting
     # Alternative: you already have jq for JSON
 
     #kube
@@ -405,7 +405,7 @@
             };
             # Alternative prettier configuration (commented out):
             # formatter = {
-            #   command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            #   command = "${pkgs.prettier}/bin/prettier";
             #   args = [ "--parser" "json" ];
             # };
             file-types = [
@@ -422,7 +422,7 @@
             name = "yaml";
             auto-format = true;
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [
                 "--parser"
                 "yaml"
@@ -484,7 +484,7 @@
               "emmet-language-server"
             ];
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [ "--parser" "html" ];
             };
             indent = {
@@ -501,7 +501,7 @@
               "emmet-language-server"
             ];
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [ "--parser" "css" ];
             };
             indent = {
@@ -517,7 +517,7 @@
               "typescript-language-server"
             ];
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
             };
             indent = {
@@ -533,7 +533,7 @@
               "typescript-language-server"
             ];
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [ "--parser" "babel" ];
             };
             indent = {
@@ -550,7 +550,7 @@
               "emmet-language-server"
             ];
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [ "--parser" "babel" ];
             };
             indent = {
@@ -567,7 +567,7 @@
               "emmet-language-server"
             ];
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
             };
             indent = {
