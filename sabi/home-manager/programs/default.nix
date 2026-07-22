@@ -38,7 +38,7 @@
     shfmt
 
     # JSON/YAML formatters
-    nodePackages.prettier # For JSON and YAML formatting
+    prettier # For JSON and YAML formatting
     # Alternative: you already have jq for JSON
 
     #kube
@@ -157,7 +157,7 @@
           {
             name = "nix";
             auto-format = true;
-            formatter.command = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+            formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
           }
           {
             name = "python";
@@ -399,7 +399,7 @@
             };
             # Alternative prettier configuration (commented out):
             # formatter = {
-            #   command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            #   command = "${pkgs.prettier}/bin/prettier";
             #   args = [ "--parser" "json" ];
             # };
             file-types = [
@@ -416,7 +416,7 @@
             name = "yaml";
             auto-format = true;
             formatter = {
-              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              command = "${pkgs.prettier}/bin/prettier";
               args = [
                 "--parser"
                 "yaml"
@@ -561,7 +561,7 @@
 
           # Bonus: Docker (if you want it)
           docker-langserver = {
-            command = "${pkgs.dockerfile-language-server-nodejs}/bin/docker-langserver";
+            command = "${pkgs.dockerfile-language-server}/bin/docker-langserver";
             args = [ "--stdio" ];
           };
         };
@@ -578,9 +578,9 @@
     git = {
       enable = true;
       package = pkgs.git;
-      userName = "Dae Choi";
-      userEmail = "daechoi@outlook.com";
-      extraConfig = {
+      settings = {
+        user.name = "Dae Choi";
+        user.email = "daechoi@outlook.com";
         core.editor = "hx";
         credential.helper = "cache";
         init.defaultBranch = "main";

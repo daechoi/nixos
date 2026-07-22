@@ -34,6 +34,8 @@
       configuration =
         { pkgs, ... }:
         {
+          # Trust Wasabi/Netskope corporate root so nix (client+daemon) works behind the TLS-inspection proxy.
+          security.pki.certificateFiles = [ ./wasabi-netskope-roots.pem ];
           ids.gids.nixbld = 350;
           system.primaryUser = "dchoi";
           services = {
