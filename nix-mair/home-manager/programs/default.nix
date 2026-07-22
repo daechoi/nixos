@@ -618,7 +618,12 @@
 
           # Rust
           rust-analyzer = {
-            command = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+            # Use PATH so per-project devenv toolchains (matched rust-analyzer +
+            # RUST_SRC_PATH) win when direnv is loaded; falls back to the
+            # home-manager rust-analyzer otherwise. Pinning the store path here
+            # forced a stale rust-analyzer that couldn't resolve newer std
+            # (e.g. "unresolved macro vec!/format_args_nl!", missing to_string).
+            command = "rust-analyzer";
             config = {
               checkOnSave = true;
               check = {
